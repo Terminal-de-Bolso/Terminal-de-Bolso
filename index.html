@@ -177,6 +177,9 @@ article p:last-of-type{margin-bottom:0}
 .voltar{color:var(--accent);font-weight:700;text-decoration:none}
 .voltar:hover,.voltar:focus-visible{text-decoration:underline}
 
+.comentarios{margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--line)}
+.comentarios h3{font-size:1.2rem;margin:0 0 1rem}
+
 /* ---- Ações na lista (editar/apagar) ---- */
 .acoes-lista{
   display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;
@@ -553,6 +556,48 @@ try{
   /* =========================================================
      Leitura de um post
      ========================================================= */
+  /* Comentários (giscus): uma conversa por post, só fora do claude.ai */
+  function temaAtualGiscus() {
+    var t = document.documentElement.dataset.theme;
+    if (t !== 'dark' && t !== 'light') {
+      t = (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    }
+    return t;
+  }
+
+  function atualizarTemaComentarios() {
+    var f = document.querySelector('iframe.giscus-frame');
+    if (!f || !f.contentWindow) return;
+    f.contentWindow.postMessage({ giscus: { setConfig: { theme: temaAtualGiscus() } } }, 'https://giscus.app');
+  }
+
+  function carregarComentarios(post, artigo) {
+    if (/claude/i.test(location.hostname)) return;
+    var caixa = el('section', 'comentarios');
+    caixa.append(el('h3', '', 'Comentários'));
+    var s = document.createElement('script');
+    s.src = 'https://giscus.app/client.js';
+    var cfg = {
+      'data-repo': 'Pinguim-de-Bolsoo/Pinguim-de-Bolso',
+      'data-repo-id': 'R_kgDOVniHSw',
+      'data-category': 'Announcements',
+      'data-category-id': 'DIC_kwDOVniHS84DKsJV',
+      'data-mapping': 'specific',
+      'data-term': post.id,
+      'data-strict': '0',
+      'data-reactions-enabled': '1',
+      'data-emit-metadata': '0',
+      'data-input-position': 'bottom',
+      'data-theme': temaAtualGiscus(),
+      'data-lang': 'pt'
+    };
+    for (var k in cfg) s.setAttribute(k, cfg[k]);
+    s.crossOrigin = 'anonymous';
+    s.async = true;
+    caixa.append(s);
+    artigo.append(caixa);
+  }
+
   function renderPost(post) {
     secaoPosts.classList.add('modo-post');
     document.title = post.titulo + ' — Pinguim de Bolso';
@@ -583,6 +628,7 @@ try{
     artigo.append(acoes);
 
     lista.replaceChildren(artigo);
+    carregarComentarios(post, artigo);
 
     if (focarTitulo) {
       focarTitulo = false;
@@ -1030,6 +1076,7 @@ try{
       raiz.dataset.theme = novo;
       try { localStorage.setItem('tema', novo); } catch (e) {}
       rotular();
+      atualizarTemaComentarios();
     });
 
     rotular();
