@@ -5,6 +5,12 @@
       "titulo": "Transformando um Tablet Antigo em Painel Inteligente",
       "data": "09/11/2026",
       "texto": "Sabe aquele tablet antigo guardado na gaveta? Ele ainda tem muita utilidade..."
+    },
+    {
+      "texto": "Foi descoberta uma vulnerabilidade crítica de execução remota de código (RCE) não autenticada no Confection WordPress Cable (CVE-2026-115252), classificada com a pontuação máxima de gravidade: 10.0[span_0](start_span)[span_0](end_span).\n\nO problema permite que qualquer pessoa na rede consiga executar código PHP arbitrário diretamente no servidor afetado, sem precisar de nenhum tipo de login ou autenticação prévia[span_1](start_span)[span_1](end_span). \n\nO que torna a situação preocupante é que, até o momento do alerta, a falha ainda não possui correção oficial listada pelos desenvolvedores[span_2](start_span)[span_2](end_span). As versões afetadas compreendem o intervalo de 0.4.0 até 0.4.7[span_3](start_span)[span_3](end_span).\n\nSe você utiliza esse plugin ou software em algum ambiente de produção ou gerenciamento web, é altamente recomendável desativá-lo imediatamente até que um patch de segurança oficial seja liberado para mitigar o risco de invasões.\n",
+      "tag": "Segurança",
+      "titulo": "Alerta Crítico: Falha grave no WordPress (CVE-2026-115252) com pontuação máxima 10.0",
+      "data": "09/11/2026"
     }
   ]
 }
