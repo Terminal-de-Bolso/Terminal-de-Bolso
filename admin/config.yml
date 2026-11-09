@@ -1,0 +1,27 @@
+backend:
+  name: github
+  repo: Terminal-de-Bolso/Terminal-de-Bolso
+  branch: main
+  base_url: https://api.github.com
+  auth_endpoint: https://github.com/login/oauth/authorize
+
+media_folder: ""
+public_folder: ""
+
+collections:
+  - name: "blog"
+    label: "Blog"
+    files:
+      - name: "posts"
+        label: "Posts do Blog"
+        file: "posts.json"
+        fields:
+          - label: "Lista de Posts"
+            name: "posts"
+            widget: "list"
+            fields:
+              - {label: "ID / Slug", name: "id", widget: "string", required: false}
+              - {label: "Categoria", name: "tag", widget: "string"}
+              - {label: "Título", name: "titulo", widget: "string"}
+              - {label: "Data", name: "data", widget: "string"}
+              - {label: "Texto", name: "texto", widget: "text"}
