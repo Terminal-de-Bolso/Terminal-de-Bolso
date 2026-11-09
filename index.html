@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Blog de tecnologia: Linux, programação e hardware, explicados com calma.">
-<meta name="author" content="Pinguim de Bolso">
+<meta name="author" content="Terminal de Bolso">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
-<meta property="og:title" content="Pinguim de Bolso — blog de tecnologia">
+<meta property="og:title" content="Terminal de Bolso — blog de tecnologia">
 <meta property="og:description" content="Linux, programação e hardware, explicados com calma.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
-<title>Pinguim de Bolso — blog de tecnologia</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%232f7d4f'/%3E%3Ctext%20x='32'%20y='45'%20font-family='system-ui,sans-serif'%20font-size='32'%20font-weight='800'%20text-anchor='middle'%20fill='%23fff'%3EPB%3C/text%3E%3C/svg%3E">
+<title>Terminal de Bolso — blog de tecnologia</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%232f7d4f'/%3E%3Ctext%20x='32'%20y='45'%20font-family='system-ui,sans-serif'%20font-size='32'%20font-weight='800'%20text-anchor='middle'%20fill='%23fff'%3ETB%3C/text%3E%3C/svg%3E">
 <style>
 *,
 *::before,
@@ -300,7 +300,7 @@ try{
 
 <header>
   <div class="wrap">
-    <a class="logo" href="#topo">Pinguim <span>de Bolso</span></a>
+    <a class="logo" href="#topo">Terminal <span>de Bolso</span></a>
     <nav aria-label="Menu principal">
       <a href="#posts">Posts</a>
       <a href="#terminal">Terminal</a>
@@ -356,13 +356,13 @@ try{
 
   <section id="sobre" class="sobre">
     <h2>Sobre o blog</h2>
-    <p>O Pinguim de Bolso nasceu da vontade de explicar tecnologia de um jeito simples.<br>Aqui você encontra guias práticos, sem termos desnecessários.</p>
+    <p>O Terminal de Bolso nasceu da vontade de explicar tecnologia de um jeito simples.<br>Aqui você encontra guias práticos, sem termos desnecessários.</p>
   </section>
 </main>
 
-<footer><div class="wrap">© 2026 Pinguim de Bolso. Feito com software livre em mente.</div></footer>
+<footer><div class="wrap">© 2026 Terminal de Bolso. Feito com software livre em mente.</div></footer>
 
-<script id="data" type="application/json">[{"tag": "Notícias", "titulo": "Notícias de Linux da semana (2 a 8 de novembro)", "data": "08/11/2026", "texto": "Foi uma semana cheia no mundo Linux. Aqui vai um resumo do que mais importa, de 2 a 8 de novembro.\nNovas versões: o Fedora 45 foi lançado oficialmente. O openSUSE Leap 16.1 chegou com um modo imutável, que deixa o sistema base protegido contra mudanças, e com o KDE Plasma 6.6. Já o Cinnamon 6.8, o desktop do Linux Mint, ganhou novos gestos para o touchpad.\nSegurança: o OpenSSH, programa que permite entrar em outro computador pelo terminal, ganhou a versão 10.6p2 para corrigir uma falha crítica. Ela podia deixar alguém driblar a senha em certos sistemas Linux, os que rodam o OpenSSH sem o PAM, que é o módulo usual de login. O aviso do projeto cita em especial sistemas com a biblioteca musl. Se você usa SSH, instale a atualização assim que a sua distro liberar.\nO projeto também disse que vai publicar correções de segurança com mais frequência. O motivo é o aumento de relatórios de falhas feitos com ajuda de inteligência artificial.\nOutras notícias: o gerenciador de arquivos Dolphin, do KDE, ganhou de volta a visão em colunas, depois de 15 anos. O systemd aceita código em Rust, mas não nas suas bibliotecas centrais. O CachyOS passou a funcionar no WSL, que é o jeito de rodar Linux dentro do Windows, segundo a Microsoft. E o Raspberry Pi 5 de 16 GB subiu para 385 dólares, por causa da falta de memória no mercado.\nFonte: resumo semanal e notícia do OpenSSH 10.6p2, no site linuxiac.com."}, {"tag": "Linux", "titulo": "Por que um PC antigo ainda pode ser útil", "data": "08/11/2026", "texto": "Com uma distro leve, máquinas de mais de dez anos voltam a funcionar bem. Veja como escolher e o que esperar.\nMuitas vezes, o que pesa em um PC velho é o sistema, com muita coisa rodando ao fundo, e não o hardware em si. Distros pensadas para máquinas modestas, como o Linux Mint na versão Xfce, o Lubuntu ou o antiX, usam menos memória logo ao ligar.\nAntes de instalar, teste: grave a distro em um pendrive e inicie o computador por ele. Dá para usar tudo sem mexer no disco. Se o Wi-Fi, o som e o vídeo funcionarem, a instalação costuma ser tranquila.\nDuas dicas valem ouro: faça backup dos seus arquivos antes e, se puder, troque o HD por um SSD. Em um computador antigo, essa costuma ser a melhora mais perceptível."}, {"tag": "Python", "titulo": "Primeiros passos em Python no terminal", "data": "08/11/2026", "texto": "Instalar, abrir o interpretador e escrever o primeiro programa. Tudo em poucos minutos.\nNo Linux, o Python 3 geralmente já vem instalado. Abra o terminal e digite python3 --version para conferir.\nDepois, digite python3 e aperte Enter. O prompt muda para >>>, e você já pode escrever código. Experimente: print(\"Olá, mundo!\"). Para sair, use exit().\nPara guardar o programa, crie um arquivo chamado ola.py com a mesma linha dentro e rode no terminal com python3 ola.py. É o começo de qualquer programa em Python."}, {"tag": "Privacidade", "titulo": "Como deixar o celular mais limpo e leve", "data": "08/11/2026", "texto": "Remover apps que você não usa e trocar por alternativas livres. Menos peso, mais controle.\nComece pelo simples: abra a lista de apps e desinstale o que você não usa há meses. Cada app parado ocupa espaço e, muitas vezes, continua pedindo permissões e rodando em segundo plano.\nMuitos apps que vêm de fábrica não podem ser removidos, mas dá para desativá-los nas configurações. Depois, revise as permissões: um app de lanterna não precisa do seu microfone nem da sua localização.\nPara trocar por alternativas livres, a loja F-Droid reúne apps de código aberto. Os apps do projeto Fossify, por exemplo, cobrem galeria, contatos e outros básicos, sem anúncios."}]</script>
+<script id="data" type="application/json">[{"tag": "Notícias", "titulo": "Notícias de Linux da semana (2 a 8 de novembro)", "data": "08/11/2026", "texto": "Foi uma semana cheia no mundo Linux. Aqui vai um resumo do que mais importa, de 2 a 8 de novembro.\nNovas versões: o Fedora 45 foi lançado oficialmente. O openSUSE Leap 16.1 chegou com um modo imutável, que deixa o sistema base protegido contra mudanças, e com o KDE Plasma 6.6. Já o Cinnamon 6.8, o desktop do Linux Mint, ganhou novos gestos para o touchpad.\nSegurança: o OpenSSH, programa que permite entrar em outro computador pelo terminal, ganhou a versão 10.6p2 para corrigir uma falha crítica. Ela podia deixar alguém driblar a senha em certos sistemas Linux, os que rodam o OpenSSH sem o PAM, que é o módulo usual de login. O aviso do projeto cita em especial sistemas com a biblioteca musl. Se você usa SSH, instale a atualização assim que a sua distro liberar.\nO projeto também disse que vai publicar correções de segurança com mais frequência. O motivo é o aumento de relatórios de falhas feitos com ajuda de inteligência artificial.\nOutras notícias: o gerenciador de arquivos Dolphin, do KDE, ganhou de volta a visão em colunas, depois de 15 anos. O systemd aceita código em Rust, mas não nas suas bibliotecas centrais. O CachyOS passou a funcionar no WSL, que é o jeito de rodar Linux dentro do Windows, segundo a Microsoft. E o Raspberry Pi 5 de 16 GB subiu para 385 dólares, por causa da falta de memória no mercado.\nFonte: resumo semanal e notícia do OpenSSH 10.6p2, no site linuxiac.com."}, {"tag": "Linux", "titulo": "Por que um PC antigo ainda pode ser útil", "data": "08/11/2026", "texto": "Com una distro leve, máquinas de mais de dez anos voltam a funcionar bem. Veja como escolher e o que esperar.\nMuitas vezes, o que pesa em um PC velho é o sistema, com muita coisa rodando ao fundo, e não o hardware em si. Distros pensadas para máquinas modestas, como o Linux Mint na versão Xfce, o Lubuntu ou o antiX, usam menos memória logo ao ligar.\nAntes de instalar, teste: grave a distro em um pendrive e inicie o computador por ele. Dá para usar tudo sem mexer no disco. Se o Wi-Fi, o som e o vídeo funcionarem, a instalação costuma ser tranquila.\nDuas dicas valem ouro: faça backup dos seus arquivos antes e, se puder, troque o HD por um SSD. Em um computador antigo, essa costuma ser a melhora mais perceptível."}, {"tag": "Python", "titulo": "Primeiros passos em Python no terminal", "data": "08/11/2026", "texto": "Instalar, abrir o interpretador e escrever o primeiro programa. Tudo em poucos minutos.\nNo Linux, o Python 3 geralmente já vem instalado. Abra o terminal e digite python3 --version para conferir.\nDepois, digite python3 e aperte Enter. O prompt muda para >>>, e você já pode escrever código. Experimente: print(\"Olá, mundo!\"). Para sair, use exit().\nPara guardar o programa, crie um arquivo chamado ola.py com a mesma linha dentro e rode no terminal com python3 ola.py. É o começo de qualquer programa em Python."}, {"tag": "Privacidade", "titulo": "Como deixar o celular mais limpo e leve", "data": "08/11/2026", "texto": "Remover apps que você não usa e trocar por alternativas livres. Menos peso, mais controle.\nComece pelo simples: abra a lista de apps e desinstale o que você não usa há meses. Cada app parado ocupa espaço e, muitas vezes, continua pedindo permissões e rodando em segundo plano.\nMuitos apps que vêm de fábrica não podem ser removidos, mas dá para desativá-los nas configurações. Depois, revise as permissões: um app de lanterna não precisa do seu microfone nem da sua localização.\nPara trocar por alternativas livres, a loja F-Droid reúne apps de código aberto. Os apps do projeto Fossify, por exemplo, cobrem galeria, contatos e outros básicos, sem anúncios."}]</script>
 
 <script>
 /* Compatibilidade: navegadores antigos não têm replaceChildren */
@@ -604,7 +604,7 @@ if(!Element.prototype.replaceChildren){Element.prototype.replaceChildren=functio
 
   function renderPost(post) {
     secaoPosts.classList.add('modo-post');
-    document.title = post.titulo + ' — Pinguim de Bolso';
+    document.title = post.titulo + ' — Terminal de Bolso';
 
     var artigo = el('article', 'post-completo');
 
