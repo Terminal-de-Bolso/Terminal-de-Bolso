@@ -2,7 +2,7 @@ backend:
   name: github
   repo: Terminal-de-Bolso/Terminal-de-Bolso
   branch: main
-  base_url: https://api.github.com
+  base_url: https://curly-salad-9804.marcosviniciusmirandalopes762.workers.dev
 
 media_folder: ""
 public_folder: ""
