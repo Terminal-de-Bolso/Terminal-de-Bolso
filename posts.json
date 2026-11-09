@@ -11,6 +11,12 @@
       "titulo": "Adeus, Bloatware: Como Limpar seu Celular de Fábrica com o Universal Android Debloater (UAD)",
       "tag": "Android",
       "data": "09/11/2026"
+    },
+    {
+      "tag": "Linux 🐧",
+      "titulo": "🐧 Resumo — Notícias do Mundo Linux (Novembro de 2026)",
+      "data": "09/11/2026",
+      "texto": "\n​Segurança e IA: A OpenAI encontrou 948 falhas de root no kernel Linux em poucas horas usando IA, acendendo um alerta máximo sobre a velocidade de ataques e a necessidade urgente de atualizar os sistemas. Destacam-se também as vulnerabilidades CVE-2026-98432 e CVE-2026-90521 (escape de containers no Ubuntu).\n​Kernel Linux 7.4: Anunciado o 7.4-rc2 por Linus Torvalds, trazendo otimizações no FAT32, melhorias no driver AMDGPU para HDMI 2.2 FRL e correções de memória impulsionadas por IA. A versão 7.2 chegou ao fim de vida (EOL).\n​Fedora 45: Lançado em 3 de novembro com GNOME 51, substituição do console tradicional por KMSCON, suporte a Snapdragon X (ARM) e foco em segurança.\n​Slax 2026.11: Atualização da distro portátil baseada no Debian 13 e kernel 6.12, que agora conta com assistente de IA integrado, suporte a UEFI Secure Boot e instalador gráfico.\n​Gaming no Linux: O SteamOS 3.9.5 consolida a base Arch para hardware AMD, enquanto o Bazzite se firma como a melhor opção para placas NVIDIA e uma gama maior de dispositivos portáteis."
     }
   ]
 }
