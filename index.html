@@ -187,15 +187,17 @@ try{
 
   function limpar(valor, max) {
     return String(valor == null ? '' : valor)
-      .replace(/\r\n?/g, '\n')
-      .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
+      .replace(/
+?/g, '
+')
+      .replace(/[ --]/g, '')
       .trim()
       .slice(0, max);
   }
 
   function slugificar(texto) {
     var s = String(texto || '').toLowerCase();
-    try { s = s.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); } catch (e) {}
+    try { s = s.normalize('NFD').replace(/[̀-ͯ]/g, ''); } catch (e) {}
     s = s.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
     return s || 'post';
   }
@@ -260,7 +262,8 @@ try{
   }
 
   function paragrafos(texto) {
-    return texto.split('\n').map(function (l) { return l.trim(); }).filter(Boolean);
+    return texto.split('
+').map(function (l) { return l.trim(); }).filter(Boolean);
   }
 
   function render() {
@@ -465,7 +468,7 @@ try{
       return res.json();
     })
     .then(function(data) {
-      POSTS = normalizar(data);
+      POSTS = normalizar(data).reverse();
       atribuirIds();
       render();
     })
