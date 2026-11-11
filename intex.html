@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Blog de tecnologia: Linux, programação e hardware, explicados com calma.">
+<meta name="author" content="Terminal de Bolso">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Terminal de Bolso — blog de tecnologia">
+<meta property="og:description" content="Linux, programação e hardware, explicados com calma.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
+<title>Terminal de Bolso — blog de tecnologia</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%232f7d4f'/%3E%3Ctext%20x='32'%20y='45'%20font-family='system-ui,sans-serif'%20font-size='32'%20font-weight='800'%20text-anchor='middle'%20fill='%23fff'%3ETB%3C/text%3E%3C/svg%3E">
+<!-- Biblioteca Marked para renderizar Markdown -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+
+:root{
+  --bg:#ffffff;--surface:#f7faf8;--ink:#111827;--muted:#4b5563;
+  --accent:#2f7d4f;--line:#e5e7eb;--pastel:#b8e6c4;--onpastel:#12361f;
+  --erro:#b91c1c;--radius:8px;color-scheme:light dark;
+}
+
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1115;--surface:#161a20;--ink:#f3f4f6;--muted:#a3adb8;
+    --accent:#8fd6a4;--line:#2a303a;--pastel:#a8e0b8;--erro:#fca5a5;
+  }
+}
+
+:root[data-theme="dark"]{
+  color-scheme:dark;--bg:#0f1115;--surface:#161a20;--ink:#f3f4f6;
+  --muted:#a3adb8;--accent:#8fd6a4;--line:#2a303a;--pastel:#a8e0b8;--erro:#fca5a5;
+}
+
+:root[data-theme="light"]{color-scheme:light}
+
+html{scroll-behavior:smooth;scroll-padding-top:1rem;-webkit-text-size-adjust:100%}
+
+body{
+  margin:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  background:var(--bg);color:var(--ink);
+  font:1.125rem/1.9 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  letter-spacing:.01em;-webkit-font-smoothing:antialiased;
+}
+
+::selection{background:var(--pastel);color:var(--onpastel)}
+
+.wrap{max-width:46rem;margin-inline:auto;padding-inline:1.25rem}
+
+header{border-bottom:3px solid var(--ink);padding:1.25rem 0}
+header .wrap{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+
+.logo{font-weight:800;font-size:1.6rem;line-height:1;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+.logo span{background:var(--pastel);color:var(--onpastel);padding:0 .25rem;border-radius:4px}
+
+nav{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem 1.25rem}
+nav a{color:var(--ink);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;text-decoration:none}
+nav a:hover{color:var(--accent);text-decoration:underline}
+
+.hero{padding:4rem 0 3rem}
+.hero h1{font-weight:800;font-size:clamp(2.2rem,7vw,3.4rem);line-height:1.15;letter-spacing:-.02em;margin:0 0 1.5rem}
+.hero p{color:var(--muted);max-width:34rem;margin:0}
+
+.prompt{font:1rem/1.6 ui-monospace,"DejaVu Sans Mono",monospace;color:var(--accent);margin-bottom:1.5rem}
+.cursor{display:inline-block;width:.6em;height:1.1em;background:var(--pastel);outline:1px solid var(--accent);vertical-align:text-bottom;animation:blink 1.1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+
+h2{font-size:1.05rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);border-bottom:2px solid var(--ink);padding-bottom:.5rem;margin:0 0 1.5rem}
+
+article{border-bottom:1px solid var(--line);padding:1.75rem 0}
+article:last-of-type{border-bottom:0}
+article h3{font-size:1.45rem;font-weight:800;line-height:1.3;margin:0 0 .75rem;letter-spacing:-.01em}
+article h3 a{color:inherit;text-decoration:none}
+article h3 a:hover{color:var(--accent);text-decoration:underline}
+article p{margin:0 0 1rem;color:var(--muted)}
+article a{color:var(--accent);text-decoration:underline}
+article img{max-width:100%;height:auto;border-radius:var(--radius);border:1px solid var(--line);margin:1rem 0}
+
+/* Estilos para elementos gerados via Markdown */
+.conteudo-markdown pre {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow-x: auto;
+}
+.conteudo-markdown code {
+  font-family: ui-monospace, "DejaVu Sans Mono", monospace;
+  background: var(--surface);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+.conteudo-markdown blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 1rem 0;
+  padding-left: 1rem;
+  color: var(--muted);
+}
+
+.linha{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem .75rem;margin-bottom:.7rem}
+.meta{font-size:.95rem;color:var(--muted)}
+.tag{display:inline-block;background:var(--pastel);color:var(--onpastel);border-radius:999px;padding:.1rem .7rem;font-size:.8rem;font-weight:800;line-height:1.7;text-transform:uppercase;letter-spacing:.08em}
+
+.ler-mais{display:inline-block;margin-top:.35rem;font-weight:700;font-size:.95rem;color:var(--accent);text-decoration:none;border-bottom:2px solid transparent}
+.ler-mais:hover{border-bottom-color:var(--accent)}
+
+#posts.modo-post #busca,
+#posts.modo-post > h2{display:none}
+
+.post-completo{border-bottom:0;padding-top:0}
+.titulo-post{font-size:clamp(1.7rem,5vw,2.4rem);font-weight:800;line-height:1.2;letter-spacing:-.02em;margin:.25rem 0 1.25rem;color:var(--ink)}
+
+.acoes-post{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--line)}
+.voltar{color:var(--accent);font-weight:700;text-decoration:none}
+.voltar:hover{text-decoration:underline}
+
+.comentarios{margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--line)}
+.comentarios h3{font-size:1.2rem;margin:0 0 1rem}
+
+.vazio{color:var(--muted);font-style:italic;padding:1.5rem 0;margin:0}
+.sobre{padding:2rem 0 3rem}
+footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-size:.95rem}
+
+button{font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:6px;padding:.5rem 1.25rem;background:var(--pastel);color:var(--onpastel)}
+button:hover{filter:brightness(1.08)}
+#tema{margin:0;padding:.3rem 1rem;font-size:.9rem}
+
+#busca{margin-bottom:1rem}
+#busca label{display:block;margin-bottom:.3rem;color:var(--muted);font-size:.95rem}
+#busca input{width:100%;font:inherit;line-height:1.6;padding:.6rem .8rem;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+
+.cmd{display:flex;align-items:center;gap:.75rem 1rem;flex-wrap:wrap;padding:.9rem 0;border-bottom:1px solid var(--line)}
+.cmd code{font:1rem/1.6 ui-monospace,"DejaVu Sans Mono",monospace;padding:.2rem .7rem;border-radius:6px;background:var(--pastel);color:var(--onpastel)}
+.cmd span{flex:1 1 12rem;color:var(--muted)}
+.cp{margin:0;padding:.3rem 1rem}
+</style>
+<script>
+try{
+  var temaSalvo = localStorage.getItem('tema');
+  if(temaSalvo==='dark'||temaSalvo==='light'){document.documentElement.dataset.theme=temaSalvo;}
+}catch(e){}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#topo">Terminal <span>de Bolso</span></a>
+    <nav aria-label="Menu principal">
+      <a href="#posts">Posts</a>
+      <a href="#mais">Mais posts</a>
+      <a href="#terminal">Terminal</a>
+      <a href="#sobre">Sobre</a>
+      <button id="tema" type="button">Tema</button>
+    </nav>
+  </div>
+</header>
+
+<main id="topo" class="wrap">
+  <section class="hero">
+    <div class="prompt">~$ aprender --sem-pressa<span class="cursor" aria-hidden="true"></span></div>
+    <h1>Tecnologia explicada com calma.</h1>
+    <p>Um blog sobre Linux, programação e hardware.<br>Textos curtos, claros e sem enrolação.</p>
+  </section>
+
+  <section id="posts">
+    <h2>Últimos posts</h2>
+    <div id="busca">
+      <label for="q">Buscar posts</label>
+      <input id="q" type="search" placeholder="Digite uma palavra" autocomplete="off">
+    </div>
+    <div id="lista"><p class="vazio">Carregando posts...</p></div>
+  </section>
+
+  <section id="terminal" class="sobre">
+    <h2>Cantinho do terminal</h2>
+    <div class="cmd"><code>ls -lah</code><span>Lista os arquivos, com o tamanho de cada um.</span><button class="cp" type="button">Copiar</button></div>
+    <div class="cmd"><code>df -h</code><span>Mostra quanto espaço livre ainda tem no disco.</span><button class="cp" type="button">Copiar</button></div>
+    <div class="cmd"><code>free -h</code><span>Mostra quanta memória RAM está em uso.</span><button class="cp" type="button">Copiar</button></div>
+    <div class="cmd"><code>python3 -m http.server</code><span>Abre um mini servidor web na pasta atual.</span><button class="cp" type="button">Copiar</button></div>
+  </section>
+
+  <section id="sobre" class="sobre">
+    <h2>Sobre o blog</h2>
+    <p>O Terminal de Bolso nasceu da vontade de explicar tecnologia de um jeito simples.<br>Aqui você encontra guias práticos, sem termos desnecessários.</p>
+  </section>
+</main>
+
+<footer><div class="wrap">© 2026 Terminal de Bolso. Feito com software livre em mente.</div></footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var LIMITES = { tag: 40, titulo: 120, texto: 8000 };
+  var MAX_POSTS = 200;
+  var TITULO_BASE = document.title;
+  var POSTS = [];
+  var filtro = '';
+  var slugExibido = '';
+
+  var lista = document.getElementById('lista');
+  var secaoPosts = document.getElementById('posts');
+  var busca = document.getElementById('q');
+
+  function limpar(valor, max) {
+    return String(valor == null ? '' : valor)
+      .replace(/\r\n?/g, '\n')
+      .trim()
+      .slice(0, max);
+  }
+
+  function slugificar(texto) {
+    var s = String(texto || '').toLowerCase();
+    try { s = s.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); } catch (e) {}
+    s = s.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
+    return s || 'post';
+  }
+
+  function normalizar(listaBruta) {
+    var arrayPosts = Array.isArray(listaBruta) ? listaBruta : (listaBruta.posts || []);
+    var saida = [];
+    for (var i = 0; i < arrayPosts.length && saida.length < MAX_POSTS; i++) {
+      var item = arrayPosts[i];
+      if (!item || typeof item !== 'object') continue;
+      var tag = limpar(item.tag, LIMITES.tag) || 'Geral';
+      var titulo = limpar(item.titulo, LIMITES.titulo);
+      var texto = limpar(item.texto, LIMITES.texto);
+      var data = limpar(item.data, 20);
+      var id = limpar(item.id, 80);
+      if (titulo && texto) {
+        saida.push({ id: id, tag: tag, titulo: titulo, texto: texto, data: data });
+      }
+    }
+    return saida;
+  }
+
+  function atribuirIds() {
+    var usados = Object.create(null);
+    POSTS.forEach(function (p) {
+      var base = p.id ? slugificar(p.id) : slugificar(p.titulo);
+      var id = base, n = 2;
+      while (usados[id]) { id = base + '-' + n; n++; }
+      usados[id] = 1;
+      p.id = id;
+    });
+  }
+
+  function acharPost(slug) {
+    if (!slug) return null;
+    for (var i = 0; i < POSTS.length; i++) {
+      if (POSTS[i].id === slug) return POSTS[i];
+    }
+    return null;
+  }
+
+  function slugDoHash() {
+    var m = /^#post\/(.+)$/.exec(location.hash || '');
+    if (!m) return '';
+    try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; }
+  }
+
+  function hrefDoPost(post) {
+    return '#post/' + encodeURIComponent(post.id);
+  }
+
+  function el(tag, classe, texto) {
+    var n = document.createElement(tag);
+    if (classe) n.className = classe;
+    if (texto !== undefined) n.textContent = texto;
+    return n;
+  }
+
+  function minutosDeLeitura(texto) {
+    var palavras = texto.split(/\s+/).filter(Boolean).length;
+    return Math.max(1, Math.ceil(palavras / 200));
+  }
+
+  function render() {
+    var hash = location.hash || '';
+    if (hash === '#mais') {
+      renderMaisPosts();
+      return;
+    }
+
+    var slug = slugDoHash();
+    var post = acharPost(slug);
+    if (slug && !post) slug = '';
+
+    slugExibido = slug;
+    if (post) renderPost(post);
+    else renderLista();
+  }
+
+  function renderLista() {
+    secaoPosts.classList.remove('modo-post');
+    document.title = TITULO_BASE;
+
+    var buscaEl = document.getElementById('busca');
+    var h2Posts = secaoPosts.querySelector('h2');
+    if (buscaEl) buscaEl.style.display = '';
+    if (h2Posts) h2Posts.style.display = '';
+
+    var frag = document.createDocumentFragment();
+    var encontrados = POSTS.filter(function (p) {
+      if (!filtro) return true;
+      return (p.tag + ' ' + p.titulo + ' ' + p.texto).toLowerCase().indexOf(filtro) !== -1;
+    });
+
+    var limiteHome = encontrados;
+    var mostrarBotaoMais = false;
+    if (!filtro && encontrados.length > 3) {
+      limiteHome = encontrados.slice(0, 3);
+      mostrarBotaoMais = true;
+    }
+
+    if (!encontrados.length) {
+      frag.append(el('p', 'vazio', POSTS.length
+        ? 'Nenhum post combina com a busca.'
+        : 'Ainda não há posts publicados.'));
+    } else {
+      limiteHome.forEach(function (p) { frag.append(criarArtigo(p)); });
+      if (mostrarBotaoMais) {
+        var divMais = el('div');
+        divMais.style.marginTop = '1.5rem';
+        var linkMais = el('a', 'ler-mais', 'Ver todos os posts (Mais posts) →');
+        linkMais.href = '#mais';
+        divMais.append(linkMais);
+        frag.append(divMais);
+      }
+    }
+    lista.replaceChildren(frag);
+  }
+
+  function criarArtigo(post) {
+    var artigo = el('article');
+
+    var linha = el('div', 'linha');
+    linha.append(el('span', 'tag', post.tag));
+    var partes = [];
+    if (post.data) partes.push(post.data);
+    partes.push(minutosDeLeitura(post.texto) + ' min de leitura');
+    linha.append(el('span', 'meta', partes.join(' · ')));
+
+    var h3 = el('h3');
+    var link = el('a', '', post.titulo);
+    link.href = hrefDoPost(post);
+    h3.append(link);
+
+    artigo.append(linha, h3);
+
+    // Renderiza o primeiro bloco/parágrafo do Markdown como resumo na home
+    var resumo = el('div', 'conteudo-markdown');
+    var primeiroBloco = post.texto.split('\n\n')[0] || post.texto;
+    resumo.innerHTML = marked.parse(primeiroBloco);
+    artigo.append(resumo);
+
+    var mais = el('a', 'ler-mais', 'Ler post →');
+    mais.href = hrefDoPost(post);
+    artigo.append(mais);
+
+    return artigo;
+  }
+
+  function renderMaisPosts() {
+    secaoPosts.classList.add('modo-post');
+    document.title = 'Mais posts — Terminal de Bolso';
+    slugExibido = '';
+
+    var buscaEl = document.getElementById('busca');
+    var h2Posts = secaoPosts.querySelector('h2');
+    if (buscaEl) buscaEl.style.display = 'none';
+    if (h2Posts) h2Posts.style.display = 'none';
+
+    var artigo = el('article', 'post-completo');
+    var titulo = el('h2', 'titulo-post', 'Todos os posts');
+    artigo.append(titulo);
+
+    if (!POSTS.length) {
+      artigo.append(el('p', 'vazio', 'Ainda não há posts publicados.'));
+    } else {
+      var listaPosts = el('div');
+      POSTS.forEach(function (p) {
+        listaPosts.append(criarArtigo(p));
+      });
+      artigo.append(listaPosts);
+    }
+
+    var acoes = el('div', 'acoes-post');
+    var voltar = el('a', 'voltar', '← Voltar para a página inicial');
+    voltar.href = '#posts';
+    acoes.append(voltar);
+    artigo.append(acoes);
+
+    lista.replaceChildren(artigo);
+  }
+
+  function temaAtualGiscus() {
+    var t = document.documentElement.dataset.theme;
+    if (t !== 'dark' && t !== 'light') {
+      t = (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    }
+    return t;
+  }
+
+  function atualizarTemaComentarios() {
+    var f = document.querySelector('iframe.giscus-frame');
+    if (!f || !f.contentWindow) return;
+    f.contentWindow.postMessage({ giscus: { setConfig: { theme: temaAtualGiscus() } } }, 'https://giscus.app');
+  }
+
+  function carregarComentarios(post, artigo) {
+    var caixa = el('section', 'comentarios');
+    caixa.append(el('h3', '', 'Comentários'));
+    var s = document.createElement('script');
+    s.src = 'https://giscus.app/client.js';
+    var cfg = {
+      'data-repo': 'Terminal-de-Bolso/Terminal-de-Bolso',
+      'data-repo-id': 'R_kgDOVniHSw',
+      'data-category': 'Announcements',
+      'data-category-id': 'DIC_kwDOVniHS84DKsJV',
+      'data-mapping': 'specific',
+      'data-term': post.id,
+      'data-strict': '0',
+      'data-reactions-enabled': '1',
+      'data-emit-metadata': '0',
+      'data-input-position': 'bottom',
+      'data-theme': temaAtualGiscus(),
+      'data-lang': 'pt'
+    };
+    for (var k in cfg) s.setAttribute(k, cfg[k]);
+    s.crossOrigin = 'anonymous';
+    s.async = true;
+    caixa.append(s);
+    artigo.append(caixa);
+  }
+
+  function renderPost(post) {
+    secaoPosts.classList.add('modo-post');
+    document.title = post.titulo + ' — Terminal de Bolso';
+
+    var buscaEl = document.getElementById('busca');
+    var h2Posts = secaoPosts.querySelector('h2');
+    if (buscaEl) buscaEl.style.display = 'none';
+    if (h2Posts) h2Posts.style.display = 'none';
+
+    var artigo = el('article', 'post-completo');
+
+    var linha = el('div', 'linha');
+    linha.append(el('span', 'tag', post.tag));
+    var partes = [];
+    if (post.data) partes.push(post.data);
+    partes.push(minutosDeLeitura(post.texto) + ' min de leitura');
+    linha.append(el('span', 'meta', partes.join(' · ')));
+
+    var titulo = el('h2', 'titulo-post', post.titulo);
+    artigo.append(linha, titulo);
+
+    // Renderiza o texto completo utilizando o Marked (Markdown)
+    var conteudo = el('div', 'conteudo-markdown');
+    conteudo.innerHTML = marked.parse(post.texto);
+    artigo.append(conteudo);
+
+    var acoes = el('div', 'acoes-post');
+    var voltar = el('a', 'voltar', '← Voltar para os posts');
+    voltar.href = '#posts';
+    acoes.append(voltar);
+    artigo.append(acoes);
+
+    lista.replaceChildren(artigo);
+    carregarComentarios(post, artigo);
+  }
+
+  fetch('posts.json')
+    .then(function(res) {
+      if (!res.ok) throw new Error('Erro ao carregar JSON');
+      return res.json();
+    })
+    .then(function(data) {
+      POSTS = normalizar(data).reverse();
+      atribuirIds();
+      render();
+    })
+    .catch(function(err) {
+      console.error(err);
+      lista.replaceChildren(el('p', 'vazio', 'Erro ao carregar os posts. Verifique se o arquivo posts.json existe.'));
+    });
+
+  if (busca) {
+    busca.addEventListener('input', function () {
+      filtro = busca.value.trim().toLowerCase();
+      if (!slugExibido) renderLista();
+    });
+  }
+
+  window.addEventListener('hashchange', function () {
+    render();
+  });
+
+  document.querySelectorAll('.cp').forEach(function (btn) {
+    btn.addEventListener('click', async function () {
+      var cmd = btn.closest('.cmd');
+      var code = cmd && cmd.querySelector('code');
+      if (!code) return;
+      try {
+        await navigator.clipboard.writeText(code.textContent);
+        btn.textContent = 'Copiado!';
+        setTimeout(function () { btn.textContent = 'Copiar'; }, 2000);
+      } catch (e) {}
+    });
+  });
+
+  (function iniciarTema() {
+    var botao = document.getElementById('tema');
+    if (!botao) return;
+    var raiz = document.documentElement;
+
+    function atual() {
+      if (raiz.dataset.theme === 'dark' || raiz.dataset.theme === 'light') {
+        return raiz.dataset.theme;
+      }
+      return (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    }
+
+    botao.addEventListener('click', function () {
+      var novo = atual() === 'dark' ? 'light' : 'dark';
+      raiz.dataset.theme = novo;
+      try { localStorage.setItem('tema', novo); } catch (e) {}
+      atualizarTemaComentarios();
+    });
+  })();
+
+})();
+</script>
+</body>
+</html>
