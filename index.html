@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Blog de tecnologia: Linux, programação e hardware, explicados com calma.">
-<meta name="author" content="Terminal de Bolso">
+<meta name="author" content="Marcos Vinícius">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:title" content="Terminal de Bolso — blog de tecnologia">
@@ -388,7 +387,7 @@ try{
     });
     linha.append(tagSpan);
 
-    var partes = [];
+    var partes = ['Por Marcos Vinícius'];
     if (post.data) partes.push(post.data);
     partes.push(minutosDeLeitura(post.texto) + ' min de leitura');
     linha.append(el('span', 'meta', partes.join(' · ')));
@@ -506,7 +505,7 @@ try{
     });
     linha.append(tagSpan);
 
-    var partes = [];
+    var partes = ['Por Marcos Vinícius'];
     if (post.data) partes.push(post.data);
     partes.push(minutosDeLeitura(post.texto) + ' min de leitura');
     linha.append(el('span', 'meta', partes.join(' · ')));
