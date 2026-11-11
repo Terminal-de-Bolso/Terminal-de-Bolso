@@ -14,7 +14,7 @@
 <meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
 <title>Terminal de Bolso — blog de tecnologia</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%232f7d4f'/%3E%3Ctext%20x='32'%20y='45'%20font-family='system-ui,sans-serif'%20font-size='32'%20font-weight='800'%20text-anchor='middle'%20fill='%23fff'%3ETB%3C/text%3E%3C/svg%3E">
-<!-- Biblioteca Marked para suporte a Markdown -->
+<!-- Biblioteca Marked para renderizar Markdown -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box}
@@ -94,21 +94,12 @@ article img{max-width:100%;height:auto;border-radius:var(--radius);border:1px so
   background: var(--surface);
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
-  font-size: 0.95em;
 }
 .conteudo-markdown blockquote {
   border-left: 4px solid var(--accent);
   margin: 1rem 0;
   padding-left: 1rem;
   color: var(--muted);
-}
-.conteudo-markdown ul, .conteudo-markdown ol {
-  padding-left: 1.5rem;
-  margin-bottom: 1rem;
-  color: var(--muted);
-}
-.conteudo-markdown li {
-  margin-bottom: 0.5rem;
 }
 
 .linha{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem .75rem;margin-bottom:.7rem}
@@ -363,11 +354,11 @@ try{
 
     artigo.append(linha, h3);
 
-    // Renderiza o resumo em Markdown (primeiro bloco de texto)
-    var resumoDiv = el('div', 'conteudo-markdown');
+    // Renderiza o primeiro bloco/parágrafo do Markdown como resumo na home
+    var resumo = el('div', 'conteudo-markdown');
     var primeiroBloco = post.texto.split('\n\n')[0] || post.texto;
-    resumoDiv.innerHTML = marked.parse(primeiroBloco);
-    artigo.append(resumoDiv);
+    resumo.innerHTML = marked.parse(primeiroBloco);
+    artigo.append(resumo);
 
     var mais = el('a', 'ler-mais', 'Ler post →');
     mais.href = hrefDoPost(post);
@@ -470,7 +461,7 @@ try{
     var titulo = el('h2', 'titulo-post', post.titulo);
     artigo.append(linha, titulo);
 
-    // Renderiza o texto completo utilizando Markdown
+    // Renderiza o texto completo utilizando o Marked (Markdown)
     var conteudo = el('div', 'conteudo-markdown');
     conteudo.innerHTML = marked.parse(post.texto);
     artigo.append(conteudo);
@@ -485,7 +476,6 @@ try{
     carregarComentarios(post, artigo);
   }
 
-  // Carrega os posts do posts.json gerado pelo Decap CMS
   fetch('posts.json')
     .then(function(res) {
       if (!res.ok) throw new Error('Erro ao carregar JSON');
@@ -512,7 +502,6 @@ try{
     render();
   });
 
-  // Copiar código do terminal
   document.querySelectorAll('.cp').forEach(function (btn) {
     btn.addEventListener('click', async function () {
       var cmd = btn.closest('.cmd');
@@ -526,7 +515,6 @@ try{
     });
   });
 
-  // Alternar tema
   (function iniciarTema() {
     var botao = document.getElementById('tema');
     if (!botao) return;
