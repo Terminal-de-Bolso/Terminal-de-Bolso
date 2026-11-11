@@ -102,6 +102,19 @@ article img{max-width:100%;height:auto;border-radius:var(--radius);border:1px so
   color: var(--muted);
 }
 
+/* Resumo inteligente com limite de 2 linhas na home */
+.resumo-home {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+.resumo-home p {
+  margin: 0;
+}
+
 .linha{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem .75rem;margin-bottom:.7rem}
 .meta{font-size:.95rem;color:var(--muted)}
 .tag{display:inline-block;background:var(--pastel);color:var(--onpastel);border-radius:999px;padding:.1rem .7rem;font-size:.8rem;font-weight:800;line-height:1.7;text-transform:uppercase;letter-spacing:.08em}
@@ -354,10 +367,9 @@ try{
 
     artigo.append(linha, h3);
 
-    // Renderiza apenas o primeiro bloco/parágrafo do Markdown como resumo na home
-    var resumoEl = el('div', 'conteudo-markdown');
-    var primeiroBloco = post.texto.split(/\n\s*\n/)[0] || post.texto;
-    resumoEl.innerHTML = marked.parse(primeiroBloco);
+    // Resumo com classe CSS que corta rigidamente em 2 linhas
+    var resumoEl = el('div', 'resumo-home');
+    resumoEl.innerHTML = marked.parse(post.texto);
     artigo.append(resumoEl);
 
     var mais = el('a', 'ler-mais', 'Ler post →');
