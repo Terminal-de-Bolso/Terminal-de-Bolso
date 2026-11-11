@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -16,6 +17,9 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%232f7d4f'/%3E%3Ctext%20x='32'%20y='45'%20font-family='system-ui,sans-serif'%20font-size='32'%20font-weight='800'%20text-anchor='middle'%20fill='%23fff'%3ETB%3C/text%3E%3C/svg%3E">
 <!-- Biblioteca Marked para renderizar Markdown -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+<!-- Highlight.js para destaque de sintaxe em código -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js" defer></script>
 <style>
 *,*::before,*::after{box-sizing:border-box}
 
@@ -91,6 +95,8 @@ article img{max-width:100%;height:auto;border-radius:var(--radius);border:1px so
 }
 .conteudo-markdown code {
   font-family: ui-monospace, "DejaVu Sans Mono", monospace;
+}
+.conteudo-markdown :not(pre) > code {
   background: var(--surface);
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
@@ -117,7 +123,8 @@ article img{max-width:100%;height:auto;border-radius:var(--radius);border:1px so
 
 .linha{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem .75rem;margin-bottom:.7rem}
 .meta{font-size:.95rem;color:var(--muted)}
-.tag{display:inline-block;background:var(--pastel);color:var(--onpastel);border-radius:999px;padding:.1rem .7rem;font-size:.8rem;font-weight:800;line-height:1.7;text-transform:uppercase;letter-spacing:.08em}
+.tag{display:inline-block;background:var(--pastel);color:var(--onpastel);border-radius:999px;padding:.1rem .7rem;font-size:.8rem;font-weight:800;line-height:1.7;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;transition:opacity 0.2s}
+.tag:hover{opacity:0.85}
 
 .ler-mais{display:inline-block;margin-top:.35rem;font-weight:700;font-size:.95rem;color:var(--accent);text-decoration:none;border-bottom:2px solid transparent}
 .ler-mais:hover{border-bottom-color:var(--accent)}
@@ -294,6 +301,24 @@ try{
     return Math.max(1, Math.ceil(palavras / 200));
   }
 
+  function atualizarMetaTags(titulo, descricao) {
+    document.title = titulo;
+    var ogTitle = document.querySelector('meta[property="og:title"]');
+    var ogDesc = document.querySelector('meta[property="og:description"]');
+    var metaDesc = document.querySelector('meta[name="description"]');
+    if (ogTitle) ogTitle.setAttribute('content', titulo);
+    if (ogDesc) ogDesc.setAttribute('content', descricao);
+    if (metaDesc) metaDesc.setAttribute('content', descricao);
+  }
+
+  function aplicarHighlight() {
+    if (window.hljs) {
+      document.querySelectorAll('pre code').forEach(function (block) {
+        window.hljs.highlightElement(block);
+      });
+    }
+  }
+
   function render() {
     var hash = location.hash || '';
     if (hash === '#mais') {
@@ -312,7 +337,7 @@ try{
 
   function renderLista() {
     secaoPosts.classList.remove('modo-post');
-    document.title = TITULO_BASE;
+    atualizarMetaTags(TITULO_BASE, 'Linux, programação e hardware, explicados com calma.');
 
     var buscaEl = document.getElementById('busca');
     var h2Posts = secaoPosts.querySelector('h2');
@@ -354,7 +379,15 @@ try{
     var artigo = el('article');
 
     var linha = el('div', 'linha');
-    linha.append(el('span', 'tag', post.tag));
+    var tagSpan = el('span', 'tag', post.tag);
+    tagSpan.addEventListener('click', function (e) {
+      e.preventDefault();
+      filtro = post.tag.toLowerCase();
+      if (busca) busca.value = post.tag;
+      renderLista();
+    });
+    linha.append(tagSpan);
+
     var partes = [];
     if (post.data) partes.push(post.data);
     partes.push(minutosDeLeitura(post.texto) + ' min de leitura');
@@ -454,7 +487,8 @@ try{
 
   function renderPost(post) {
     secaoPosts.classList.add('modo-post');
-    document.title = post.titulo + ' — Terminal de Bolso';
+    var resumoTexto = post.texto.replace(/[#*`_]/g, '').slice(0, 150) + '...';
+    atualizarMetaTags(post.titulo + ' — Terminal de Bolso', resumoTexto);
 
     var buscaEl = document.getElementById('busca');
     var h2Posts = secaoPosts.querySelector('h2');
@@ -464,7 +498,14 @@ try{
     var artigo = el('article', 'post-completo');
 
     var linha = el('div', 'linha');
-    linha.append(el('span', 'tag', post.tag));
+    var tagSpan = el('span', 'tag', post.tag);
+    tagSpan.addEventListener('click', function () {
+      filtro = post.tag.toLowerCase();
+      if (busca) busca.value = post.tag;
+      location.hash = '#posts';
+    });
+    linha.append(tagSpan);
+
     var partes = [];
     if (post.data) partes.push(post.data);
     partes.push(minutosDeLeitura(post.texto) + ' min de leitura');
@@ -485,6 +526,7 @@ try{
     artigo.append(acoes);
 
     lista.replaceChildren(artigo);
+    aplicarHighlight();
     carregarComentarios(post, artigo);
   }
 
