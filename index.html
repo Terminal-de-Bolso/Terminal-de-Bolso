@@ -5,159 +5,383 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Guias práticos de Linux, programação, hardware e tecnologia explicados sem enrolação. Por Marcos Vinicius.">
 <meta name="author" content="Marcos Vinicius">
+<meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Terminal de Bolso">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:title" content="Terminal de Bolso — Blog de Tecnologia e Linux">
 <meta property="og:description" content="Guias práticos de Linux, programação, hardware e tecnologia explicados sem enrolação.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Terminal de Bolso — Blog de Tecnologia e Linux">
+<meta name="twitter:description" content="Guias práticos de Linux, programação, hardware e tecnologia explicados sem enrolação.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
 <title>Terminal de Bolso — Blog de Tecnologia e Linux</title>
 <link rel="icon" type="image/png" href="favicon.png">
-<!-- Biblioteca Marked para renderizar Markdown -->
+
+<!-- Bibliotecas para Markdown, sanitização (XSS) e destaque de sintaxe -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
-<!-- Highlight.js para destaque de sintaxe em código -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js" defer></script>
+
 <style>
 *,*::before,*::after{box-sizing:border-box}
 
 :root{
-  --bg:#ffffff;--surface:#f7faf8;--ink:#111827;--muted:#4b5563;
-  --accent:#2f7d4f;--line:#e5e7eb;--pastel:#b8e6c4;--onpastel:#12361f;
-  --erro:#b91c1c;--radius:8px;color-scheme:light dark;
+  --bg:#ffffff;
+  --surface:#f4f7f5;
+  --surface-2:#ebf1ed;
+  --ink:#111827;
+  --muted:#4b5563;
+  --accent:#2f7d4f;
+  --line:#e5e7eb;
+  --pastel:#b8e6c4;
+  --onpastel:#12361f;
+  --erro:#b91c1c;
+  --radius:8px;
+  /* Syntax Highlight (Claro) */
+  --hl-kw:#8b2671;
+  --hl-str:#1c6b3b;
+  --hl-num:#9a4d00;
+  --hl-fn:#1d4ed8;
+  --hl-com:#6b7280;
+  --hl-var:#b45309;
+  color-scheme:light dark;
 }
 
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#0f1115;--surface:#161a20;--ink:#f3f4f6;--muted:#a3adb8;
-    --accent:#8fd6a4;--line:#2a303a;--pastel:#a8e0b8;--erro:#fca5a5;
+    --bg:#0f1115;
+    --surface:#161a20;
+    --surface-2:#1d222a;
+    --ink:#f3f4f6;
+    --muted:#a3adb8;
+    --accent:#8fd6a4;
+    --line:#2a303a;
+    --pastel:#a8e0b8;
+    --onpastel:#0d2917;
+    --erro:#fca5a5;
+    /* Syntax Highlight (Escuro) */
+    --hl-kw:#f472b6;
+    --hl-str:#8fd6a4;
+    --hl-num:#fbbf24;
+    --hl-fn:#93c5fd;
+    --hl-com:#7e8a9a;
+    --hl-var:#fdba74;
   }
 }
 
 :root[data-theme="dark"]{
-  color-scheme:dark;--bg:#0f1115;--surface:#161a20;--ink:#f3f4f6;
-  --muted:#a3adb8;--accent:#8fd6a4;--line:#2a303a;--pastel:#a8e0b8;--erro:#fca5a5;
+  color-scheme:dark;
+  --bg:#0f1115;
+  --surface:#161a20;
+  --surface-2:#1d222a;
+  --ink:#f3f4f6;
+  --muted:#a3adb8;
+  --accent:#8fd6a4;
+  --line:#2a303a;
+  --pastel:#a8e0b8;
+  --onpastel:#0d2917;
+  --erro:#fca5a5;
+  --hl-kw:#f472b6;
+  --hl-str:#8fd6a4;
+  --hl-num:#fbbf24;
+  --hl-fn:#93c5fd;
+  --hl-com:#7e8a9a;
+  --hl-var:#fdba74;
 }
 
 :root[data-theme="light"]{color-scheme:light}
 
-html{scroll-behavior:smooth;scroll-padding-top:1rem;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;scroll-padding-top:1.5rem;-webkit-text-size-adjust:100%}
 
 body{
-  margin:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
-  background:var(--bg);color:var(--ink);
-  font:1.125rem/1.9 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  letter-spacing:.01em;-webkit-font-smoothing:antialiased;
+  margin:0;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  background:var(--bg);
+  color:var(--ink);
+  font:1.08rem/1.85 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  letter-spacing:.01em;
+  -webkit-font-smoothing:antialiased;
 }
 
 ::selection{background:var(--pastel);color:var(--onpastel)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+.skip-link{
+  position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;
+  background:var(--pastel);color:var(--onpastel);font-weight:700;padding:.5rem 1rem;border-radius:6px;z-index:1000;
+}
+.skip-link:focus{left:1rem;top:1rem;width:auto;height:auto}
+
+/* Barra de progresso de leitura */
+#progresso-leitura{
+  position:fixed;top:0;left:0;height:3px;width:0%;
+  background:var(--accent);z-index:999;transition:width .1s linear;display:none;
+}
 
 .wrap{max-width:46rem;margin-inline:auto;padding-inline:1.25rem}
 
-header{border-bottom:3px solid var(--ink);padding:1.25rem 0}
+/* Cabeçalho */
+header{border-bottom:3px solid var(--ink);padding:1.15rem 0;background:var(--bg)}
 header .wrap{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
 
-.logo{font-weight:800;font-size:1.6rem;line-height:1;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
-.logo span{background:var(--pastel);color:var(--onpastel);padding:0 .25rem;border-radius:4px}
+.logo{font-weight:800;font-size:1.5rem;line-height:1;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+.logo span{background:var(--pastel);color:var(--onpastel);padding:.08rem .3rem;border-radius:4px}
 
-nav{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem 1.25rem}
-nav a{color:var(--ink);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;text-decoration:none}
-nav a:hover{color:var(--accent);text-decoration:underline}
+.nav-acoes{display:flex;align-items:center;gap:.75rem}
+#menu-btn{display:none;padding:.3rem .75rem;font-size:.9rem}
 
-.hero{padding:4rem 0 3rem}
-.hero h1{font-weight:800;font-size:clamp(2.2rem,7vw,3.4rem);line-height:1.15;letter-spacing:-.02em;margin:0 0 1.5rem}
+nav{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem 1.15rem}
+nav a{color:var(--ink);font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;text-decoration:none}
+nav a:hover,nav a[aria-current="page"]{color:var(--accent);text-decoration:underline;text-underline-offset:4px}
+
+/* Hero */
+.hero{padding:3.5rem 0 2.5rem}
+.hero h1{font-weight:800;font-size:clamp(2.1rem,7vw,3.3rem);line-height:1.15;letter-spacing:-.02em;margin:0 0 1.25rem}
 .hero p{color:var(--muted);max-width:34rem;margin:0}
 
-.prompt{font:1rem/1.6 ui-monospace,"DejaVu Sans Mono",monospace;color:var(--accent);margin-bottom:1.5rem}
+.prompt{font:1rem/1.6 ui-monospace,"DejaVu Sans Mono",monospace;color:var(--accent);margin-bottom:1.25rem}
 .cursor{display:inline-block;width:.6em;height:1.1em;background:var(--pastel);outline:1px solid var(--accent);vertical-align:text-bottom;animation:blink 1.1s steps(2) infinite}
 @keyframes blink{50%{opacity:0}}
 
-h2{font-size:1.05rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);border-bottom:2px solid var(--ink);padding-bottom:.5rem;margin:0 0 1.5rem}
-
-article{border-bottom:1px solid var(--line);padding:1.75rem 0}
-article:last-of-type{border-bottom:0}
-article h3{font-size:1.45rem;font-weight:800;line-height:1.3;margin:0 0 .75rem;letter-spacing:-.01em}
-article h3 a{color:inherit;text-decoration:none}
-article h3 a:hover{color:var(--accent);text-decoration:underline}
-article p{margin:0 0 1rem;color:var(--muted)}
-article a{color:var(--accent);text-decoration:underline}
-article img{max-width:100%;height:auto;border-radius:var(--radius);border:1px solid var(--line);margin:1rem 0}
-
-/* Estilos para elementos gerados via Markdown */
-.conteudo-markdown pre {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 1rem;
-  overflow-x: auto;
-}
-.conteudo-markdown code {
-  font-family: ui-monospace, "DejaVu Sans Mono", monospace;
-}
-.conteudo-markdown :not(pre) > code {
-  background: var(--surface);
-  padding: 0.2rem 0.4rem;
-  border-radius: 4px;
-}
-.conteudo-markdown blockquote {
-  border-left: 4px solid var(--accent);
-  margin: 1rem 0;
-  padding-left: 1rem;
-  color: var(--muted);
+section.bloco{padding:1.5rem 0 2.5rem}
+.secao-titulo{
+  font-size:1rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--muted);border-bottom:2px solid var(--ink);padding-bottom:.5rem;margin:0 0 1.5rem;
 }
 
-/* Resumo inteligente com limite de 2 linhas na home */
-.resumo-home {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin: 0 0 1rem;
-  color: var(--muted);
+/* Busca e filtros */
+#busca{margin-bottom:1rem}
+#busca label{display:block;margin-bottom:.35rem;color:var(--muted);font-size:.9rem;font-weight:600}
+.busca-box{display:flex;gap:.5rem;align-items:center}
+.busca-box input{
+  flex:1;width:100%;font:inherit;line-height:1.5;padding:.55rem .85rem;
+  border:1px solid var(--line);border-radius:var(--radius);background:var(--bg);color:var(--ink);
 }
-.resumo-home p {
-  margin: 0;
+.btn-secundario{
+  background:var(--surface);color:var(--ink);border:1px solid var(--line);
+  padding:.5rem .85rem;font-size:.88rem;border-radius:var(--radius);
+}
+.btn-secundario:hover{background:var(--surface-2);filter:none}
+
+.tags-filtro{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.25rem}
+.tag-btn{
+  background:var(--surface);color:var(--muted);border:1px solid var(--line);
+  border-radius:999px;padding:.2rem .75rem;font-size:.78rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.05em;transition:all .15s;
+}
+.tag-btn:hover{border-color:var(--accent);color:var(--ink);filter:none}
+.tag-btn.ativa{background:var(--pastel);color:var(--onpastel);border-color:transparent}
+
+.status-filtro{font-size:.9rem;color:var(--muted);margin:0 0 1rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+
+/* Cards de posts */
+article.card-post{border-bottom:1px solid var(--line);padding:1.6rem 0}
+article.card-post:last-of-type{border-bottom:0}
+article.card-post h3{font-size:1.4rem;font-weight:800;line-height:1.3;margin:0 0 .6rem;letter-spacing:-.01em}
+article.card-post h3 a{color:inherit;text-decoration:none}
+article.card-post h3 a:hover{color:var(--accent);text-decoration:underline}
+
+.resumo-home{
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  margin:0 0 .85rem;color:var(--muted);font-size:1rem;line-height:1.65;
 }
 
-.linha{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem .75rem;margin-bottom:.7rem}
-.meta{font-size:.95rem;color:var(--muted)}
-.tag{display:inline-block;background:var(--pastel);color:var(--onpastel);border-radius:999px;padding:.1rem .7rem;font-size:.8rem;font-weight:800;line-height:1.7;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;transition:opacity 0.2s}
-.tag:hover{opacity:0.85}
+.linha{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem .75rem;margin-bottom:.65rem}
+.meta{font-size:.9rem;color:var(--muted)}
+.tag{
+  display:inline-block;background:var(--pastel);color:var(--onpastel);border-radius:999px;
+  padding:.1rem .7rem;font-size:.76rem;font-weight:800;line-height:1.7;
+  text-transform:uppercase;letter-spacing:.07em;cursor:pointer;border:0;text-decoration:none;
+}
+.tag:hover{opacity:.85}
 
-.ler-mais{display:inline-block;margin-top:.35rem;font-weight:700;font-size:.95rem;color:var(--accent);text-decoration:none;border-bottom:2px solid transparent}
+.ler-mais{display:inline-block;margin-top:.2rem;font-weight:700;font-size:.95rem;color:var(--accent);text-decoration:none;border-bottom:2px solid transparent}
 .ler-mais:hover{border-bottom-color:var(--accent)}
 
-#posts.modo-post #busca,
-#posts.modo-post > h2{display:none}
+/* Modo Post Completo / Arquivo / Privacidade */
+.oculto{display:none !important}
 
-.post-completo{border-bottom:0;padding-top:0}
-.titulo-post{font-size:clamp(1.7rem,5vw,2.4rem);font-weight:800;line-height:1.2;letter-spacing:-.02em;margin:.25rem 0 1.25rem;color:var(--ink)}
+.breadcrumb{display:flex;align-items:center;flex-wrap:wrap;gap:.4rem;font-size:.88rem;color:var(--muted);margin:1.5rem 0 1rem}
+.breadcrumb a{color:var(--accent);text-decoration:none;font-weight:600}
+.breadcrumb a:hover{text-decoration:underline}
 
-.acoes-post{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--line)}
+.post-completo{padding:0 0 2rem}
+.titulo-post{font-size:clamp(1.75rem,5vw,2.5rem);font-weight:800;line-height:1.2;letter-spacing:-.02em;margin:.35rem 0 1.25rem;color:var(--ink)}
+
+/* Sumário automático */
+.toc{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:.9rem 1.15rem;margin:1.5rem 0;
+}
+.toc summary{font-weight:800;font-size:.9rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);cursor:pointer}
+.toc ul{margin:.75rem 0 0;padding-left:1.2rem;list-style:disc}
+.toc li{margin:.25rem 0;font-size:.95rem}
+.toc li.toc-h3{margin-left:1rem;font-size:.9rem}
+.toc a{color:var(--ink);text-decoration:none}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+
+/* Conteúdo Markdown */
+.conteudo-markdown{margin-top:1.5rem}
+.conteudo-markdown h2{font-size:1.45rem;font-weight:800;margin:2rem 0 .8rem;color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:.35rem;text-transform:none;letter-spacing:-.01em}
+.conteudo-markdown h3{font-size:1.2rem;font-weight:700;margin:1.5rem 0 .6rem;color:var(--ink)}
+.conteudo-markdown p{margin:0 0 1.15rem;color:var(--ink)}
+.conteudo-markdown ul,.conteudo-markdown ol{margin:0 0 1.2rem;padding-left:1.4rem}
+.conteudo-markdown li{margin:.35rem 0}
+.conteudo-markdown a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.conteudo-markdown img{max-width:100%;height:auto;border-radius:var(--radius);border:1px solid var(--line);margin:1.25rem 0;display:block}
+.conteudo-markdown hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
+.conteudo-markdown blockquote{
+  border-left:4px solid var(--accent);background:var(--surface);
+  margin:1.25rem 0;padding:.85rem 1.1rem;border-radius:0 var(--radius) var(--radius) 0;color:var(--muted);
+}
+.conteudo-markdown blockquote p:last-child{margin-bottom:0}
+.conteudo-markdown table{width:100%;border-collapse:collapse;margin:1.25rem 0;font-size:.95rem;display:block;overflow-x:auto}
+.conteudo-markdown th,.conteudo-markdown td{border:1px solid var(--line);padding:.55rem .75rem;text-align:left}
+.conteudo-markdown th{background:var(--surface);font-weight:700}
+
+.code-wrap{position:relative;margin:1.25rem 0}
+.code-bar{
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--surface-2);border:1px solid var(--line);border-bottom:0;
+  border-radius:var(--radius) var(--radius) 0 0;padding:.3rem .75rem;font-size:.78rem;color:var(--muted);
+  font-family:ui-monospace,"DejaVu Sans Mono",monospace;
+}
+.cp-code{padding:.18rem .6rem;font-size:.75rem;border-radius:4px}
+.conteudo-markdown pre{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:0 0 var(--radius) var(--radius);padding:1rem;overflow-x:auto;margin:0;
+  font-size:.92rem;line-height:1.6;
+}
+.conteudo-markdown code{font-family:ui-monospace,"DejaVu Sans Mono",monospace}
+.conteudo-markdown :not(pre) > code{
+  background:var(--surface);border:1px solid var(--line);padding:.12rem .38rem;border-radius:4px;font-size:.9em;
+}
+
+/* Highlight.js tokens com variáveis */
+.hljs-keyword,.hljs-selector-tag,.hljs-built_in{color:var(--hl-kw);font-weight:600}
+.hljs-string,.hljs-attr,.hljs-addition{color:var(--hl-str)}
+.hljs-number,.hljs-literal{color:var(--hl-num)}
+.hljs-title,.hljs-section,.hljs-name{color:var(--hl-fn);font-weight:600}
+.hljs-comment,.hljs-quote{color:var(--hl-com);font-style:italic}
+.hljs-variable,.hljs-template-variable,.hljs-attribute{color:var(--hl-var)}
+
+/* Compartilhamento, Autor, Navegação e Relacionados */
+.compartilhar{
+  display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;
+  margin:2rem 0;padding:1rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+.compartilhar span{font-size:.9rem;font-weight:700;color:var(--muted);margin-right:.25rem}
+.share-btn{
+  display:inline-flex;align-items:center;gap:.35rem;
+  background:var(--surface);color:var(--ink);border:1px solid var(--line);
+  border-radius:6px;padding:.35rem .75rem;font-size:.84rem;font-weight:600;text-decoration:none;cursor:pointer;
+}
+.share-btn:hover{border-color:var(--accent);color:var(--accent);filter:none}
+
+.autor-box{
+  display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.25rem;margin:1.5rem 0;
+}
+.autor-avatar{
+  width:3.2rem;height:3.2rem;border-radius:50%;background:var(--pastel);color:var(--onpastel);
+  display:grid;place-items:center;font-weight:800;font-size:1.15rem;flex-shrink:0;
+}
+.autor-info{flex:1;min-width:14rem}
+.autor-info strong{display:block;font-size:1.05rem;margin-bottom:.25rem}
+.autor-info p{margin:0;color:var(--muted);font-size:.95rem;line-height:1.55}
+
+.nav-posts{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:1rem;margin:1.5rem 0}
+.nav-post-card{
+  display:block;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:.9rem 1rem;text-decoration:none;color:var(--ink);
+}
+.nav-post-card:hover{border-color:var(--accent)}
+.nav-post-card small{display:block;color:var(--muted);font-size:.8rem;margin-bottom:.2rem}
+.nav-post-card span{font-weight:700;font-size:.98rem;line-height:1.3;display:block}
+
+.relacionados{margin:2rem 0}
+.relacionados h3{font-size:1.05rem;margin:0 0 .85rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.relacionados-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.85rem}
+.rel-card{
+  display:block;padding:.85rem 1rem;border:1px solid var(--line);border-radius:var(--radius);
+  text-decoration:none;color:var(--ink);
+}
+.rel-card:hover{border-color:var(--accent);background:var(--surface)}
+.rel-card small{display:block;color:var(--muted);font-size:.8rem;margin-bottom:.2rem}
+.rel-card strong{font-size:.98rem;line-height:1.35;display:block}
+
+.acoes-post{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid var(--line)}
 .voltar{color:var(--accent);font-weight:700;text-decoration:none}
 .voltar:hover{text-decoration:underline}
 
-.comentarios{margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--line)}
+.comentarios{margin-top:2.25rem;padding-top:1.5rem;border-top:1px solid var(--line)}
 .comentarios h3{font-size:1.2rem;margin:0 0 1rem}
 
-.vazio{color:var(--muted);font-style:italic;padding:1.5rem 0;margin:0}
-.sobre{padding:2rem 0 3rem}
-footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-size:.95rem}
+/* Cantinho do terminal, Sobre e Contato */
+.cmd{display:flex;align-items:center;gap:.75rem 1rem;flex-wrap:wrap;padding:.85rem 0;border-bottom:1px solid var(--line)}
+.cmd:last-child{border-bottom:0}
+.cmd code{font:.95rem/1.5 ui-monospace,"DejaVu Sans Mono",monospace;padding:.22rem .65rem;border-radius:6px;background:var(--pastel);color:var(--onpastel)}
+.cmd span{flex:1 1 12rem;color:var(--muted);font-size:.98rem}
+.cp{margin:0;padding:.3rem .9rem;font-size:.86rem}
 
-button{font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:6px;padding:.5rem 1.25rem;background:var(--pastel);color:var(--onpastel)}
-button:hover{filter:brightness(1.08)}
-#tema{margin:0;padding:.3rem 1rem;font-size:.9rem}
+.contato-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:1rem;margin-top:1rem}
+.contato-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem;
+}
+.contato-card h3{margin:0 0 .35rem;font-size:1rem}
+.contato-card p{margin:0 0 .75rem;color:var(--muted);font-size:.92rem;line-height:1.5}
+.contato-card a{color:var(--accent);font-weight:700;font-size:.92rem;text-decoration:none}
+.contato-card a:hover{text-decoration:underline}
 
-#busca{margin-bottom:1rem}
-#busca label{display:block;margin-bottom:.3rem;color:var(--muted);font-size:.95rem}
-#busca input{width:100%;font:inherit;line-height:1.6;padding:.6rem .8rem;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+/* Botões gerais */
+button{font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:6px;padding:.5rem 1.15rem;background:var(--pastel);color:var(--onpastel)}
+button:hover{filter:brightness(1.06)}
+#tema{margin:0;padding:.3rem .85rem;font-size:.86rem}
 
-.cmd{display:flex;align-items:center;gap:.75rem 1rem;flex-wrap:wrap;padding:.9rem 0;border-bottom:1px solid var(--line)}
-.cmd code{font:1rem/1.6 ui-monospace,"DejaVu Sans Mono",monospace;padding:.2rem .7rem;border-radius:6px;background:var(--pastel);color:var(--onpastel)}
-.cmd span{flex:1 1 12rem;color:var(--muted)}
-.cp{margin:0;padding:.3rem 1rem}
+.vazio{color:var(--muted);font-style:italic;padding:1.25rem 0;margin:0}
+
+/* Erro 404 */
+.box-404{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.5rem;margin:2rem 0;font-family:ui-monospace,"DejaVu Sans Mono",monospace;
+}
+.box-404 h1{font-size:1.35rem;margin:0 0 .6rem;color:var(--erro)}
+.box-404 p{font-family:system-ui,sans-serif;color:var(--muted);margin:0 0 1rem}
+
+/* Rodapé e utilidades */
+footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-size:.92rem;margin-top:1rem}
+.footer-grid{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-links{display:flex;flex-wrap:wrap;gap:.5rem 1.15rem}
+.footer-links a{color:var(--muted);text-decoration:none;font-weight:600}
+.footer-links a:hover{color:var(--accent);text-decoration:underline}
+
+#voltar-topo{
+  position:fixed;right:1.25rem;bottom:1.25rem;z-index:90;
+  padding:.55rem .85rem;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.15);
+  font-size:.88rem;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;transform:translateY(8px);
+}
+#voltar-topo.visivel{opacity:1;pointer-events:auto;transform:translateY(0)}
+
+#toast{
+  position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%) translateY(16px);
+  background:var(--ink);color:var(--bg);padding:.5rem 1.1rem;border-radius:999px;
+  font-size:.88rem;font-weight:600;opacity:0;pointer-events:none;z-index:1000;
+  transition:opacity .2s,transform .2s;
+}
+#toast.visivel{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:640px){
+  #menu-btn{display:inline-block}
+  nav{display:none;width:100%;padding-top:.75rem;border-top:1px solid var(--line);flex-direction:column;align-items:flex-start;gap:.65rem}
+  nav.aberto{display:flex}
+}
 </style>
+
 <script>
 try{
   var temaSalvo = localStorage.getItem('tema');
@@ -167,71 +391,154 @@ try{
 </head>
 <body>
 
+<a class="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
+<div id="progresso-leitura" aria-hidden="true"></div>
+
 <header>
   <div class="wrap">
     <a class="logo" href="#topo">Terminal <span>de Bolso</span></a>
-    <nav aria-label="Menu principal">
+    <div class="nav-acoes">
+      <button id="tema" type="button" aria-label="Alternar tema">Tema</button>
+      <button id="menu-btn" type="button" aria-expanded="false" aria-controls="menu-principal">Menu</button>
+    </div>
+    <nav id="menu-principal" aria-label="Menu principal">
       <a href="#posts">Posts</a>
-      <a href="#mais">Mais posts</a>
+      <a href="#mais">Arquivo</a>
       <a href="#terminal">Terminal</a>
       <a href="#sobre">Sobre</a>
-      <button id="tema" type="button">Tema</button>
+      <a href="#contato">Contato</a>
     </nav>
   </div>
 </header>
 
-<main id="topo" class="wrap">
-  <section class="hero">
+<main id="conteudo-principal" class="wrap">
+  <section id="topo" class="hero">
     <div class="prompt">~$ aprender --sem-pressa<span class="cursor" aria-hidden="true"></span></div>
     <h1>Tecnologia explicada com calma.</h1>
-    <p>Um blog sobre Linux, programação e hardware.<br>Textos curtos, claros e sem enrolação.</p>
+    <p>Um blog sobre Linux, programação e hardware.<br>Guias práticos, textos diretos e sem enrolação.</p>
   </section>
 
-  <section id="posts">
-    <h2>Últimos posts</h2>
+  <section id="posts" class="bloco">
+    <h2 class="secao-titulo">Últimos posts</h2>
     <div id="busca">
-      <label for="q">Buscar posts</label>
-      <input id="q" type="search" placeholder="Digite uma palavra" autocomplete="off">
+      <label for="q">Buscar no blog</label>
+      <div class="busca-box">
+        <input id="q" type="search" placeholder="Busque por título, assunto ou palavra-chave..." autocomplete="off">
+        <button id="limpar-busca" class="btn-secundario oculto" type="button">Limpar</button>
+      </div>
     </div>
+    <div id="tags-filtro" class="tags-filtro" aria-label="Filtrar por categoria"></div>
+    <div id="status-filtro" class="status-filtro oculto"></div>
     <div id="lista"><p class="vazio">Carregando posts...</p></div>
   </section>
 
-  <section id="terminal" class="sobre">
-    <h2>Cantinho do terminal</h2>
-    <div class="cmd"><code>ls -lah</code><span>Lista os arquivos, com o tamanho de cada um.</span><button class="cp" type="button">Copiar</button></div>
-    <div class="cmd"><code>df -h</code><span>Mostra quanto espaço livre ainda tem no disco.</span><button class="cp" type="button">Copiar</button></div>
-    <div class="cmd"><code>free -h</code><span>Mostra quanta memória RAM está em uso.</span><button class="cp" type="button">Copiar</button></div>
-    <div class="cmd"><code>python3 -m http.server</code><span>Abre um mini servidor web na pasta atual.</span><button class="cp" type="button">Copiar</button></div>
+  <section id="terminal" class="bloco">
+    <h2 class="secao-titulo">Cantinho do terminal</h2>
+    <div class="cmd"><code>ls -lah</code><span>Lista os arquivos (inclusive ocultos) com o tamanho legível.</span><button class="cp" type="button">Copiar</button></div>
+    <div class="cmd"><code>df -h</code><span>Mostra quanto espaço livre ainda resta no disco.</span><button class="cp" type="button">Copiar</button></div>
+    <div class="cmd"><code>free -h</code><span>Mostra quanta memória RAM e swap estão em uso.</span><button class="cp" type="button">Copiar</button></div>
+    <div class="cmd"><code>python3 -m http.server</code><span>Abre um servidor web local na pasta atual para testes.</span><button class="cp" type="button">Copiar</button></div>
   </section>
 
-  <section id="sobre" class="sobre">
-    <h2>Sobre o blog</h2>
-    <p>O Terminal de Bolso nasceu da vontade de explicar tecnologia de um jeito simples.<br>Aqui você encontra guias práticos, sem termos desnecessários.</p>
+  <section id="sobre" class="bloco">
+    <h2 class="secao-titulo">Sobre o blog</h2>
+    <p>O <strong>Terminal de Bolso</strong> nasceu da vontade de explicar tecnologia de um jeito simples, acessível e prático. Aqui você encontra anotações, tutoriais de Linux, desenvolvimento e hardware sem termos desnecessários.</p>
+    <div class="autor-box">
+      <div class="autor-avatar" aria-hidden="true">MV</div>
+      <div class="autor-info">
+        <strong>Marcos Vinicius</strong>
+        <p>Entusiasta de software livre, Linux e programação. Escrevo para documentar o que aprendo e ajudar quem está começando ou resolvendo problemas do dia a dia.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contato" class="bloco">
+    <h2 class="secao-titulo">Contato &amp; Links</h2>
+    <p>Tem alguma dúvida, sugestão de pauta ou encontrou algum erro em um tutorial?</p>
+    <div class="contato-grid">
+      <div class="contato-card">
+        <h3>GitHub &amp; Código</h3>
+        <p>Acompanhe o repositório oficial, abra issues ou sugira melhorias.</p>
+        <a href="https://github.com/Terminal-de-Bolso/Terminal-de-Bolso" target="_blank" rel="noopener noreferrer">Acessar GitHub →</a>
+      </div>
+      <div class="contato-card">
+        <h3>Comentários nos posts</h3>
+        <p>Cada artigo tem uma área de comentários integrada via GitHub Discussions.</p>
+        <a href="#mais">Explorar artigos →</a>
+      </div>
+      <div class="contato-card">
+        <h3>Dados do blog (JSON)</h3>
+        <p>Os textos do Terminal de Bolso são abertos e carregados diretamente em JSON.</p>
+        <a href="posts.json" target="_blank" rel="noopener noreferrer">Ver posts.json →</a>
+      </div>
+    </div>
   </section>
 </main>
 
-<footer><div class="wrap">© 2026 Terminal de Bolso. Feito com software livre em mente.</div></footer>
+<footer>
+  <div class="wrap footer-grid">
+    <div>© 2026 Terminal de Bolso · Por Marcos Vinicius. Feito com software livre em mente.</div>
+    <div class="footer-links">
+      <a href="#posts">Início</a>
+      <a href="#mais">Arquivo</a>
+      <a href="#privacidade">Privacidade</a>
+      <a href="https://github.com/Terminal-de-Bolso/Terminal-de-Bolso" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<button id="voltar-topo" type="button" aria-label="Voltar ao topo">↑ Topo</button>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script>
-(function () {
+document.addEventListener('DOMContentLoaded', function () {
   'use strict';
 
-  var LIMITES = { tag: 40, titulo: 120, texto: 8000 };
-  var MAX_POSTS = 200;
+  var LIMITES = { tag: 40, titulo: 120, texto: 20000 };
+  var MAX_POSTS = 300;
   var TITULO_BASE = document.title;
+  var DESCRICAO_BASE = 'Guias práticos de Linux, programação, hardware e tecnologia explicados sem enrolação. Por Marcos Vinicius.';
   var POSTS = [];
-  var filtro = '';
+  var filtroTexto = '';
+  var filtroTag = '';
   var slugExibido = '';
 
   var lista = document.getElementById('lista');
+  var secaoHero = document.getElementById('topo');
   var secaoPosts = document.getElementById('posts');
+  var secaoTerminal = document.getElementById('terminal');
+  var secaoSobre = document.getElementById('sobre');
+  var secaoContato = document.getElementById('contato');
+  var tituloSecaoPosts = secaoPosts.querySelector('.secao-titulo');
+  var buscaBox = document.getElementById('busca');
   var busca = document.getElementById('q');
+  var limparBuscaBtn = document.getElementById('limpar-busca');
+  var tagsFiltroEl = document.getElementById('tags-filtro');
+  var statusFiltroEl = document.getElementById('status-filtro');
+  var progressoEl = document.getElementById('progresso-leitura');
+  var voltarTopoBtn = document.getElementById('voltar-topo');
+  var toastEl = document.getElementById('toast');
+  var toastTimer = null;
+
+  function el(tag, classe, texto) {
+    var n = document.createElement(tag);
+    if (classe) n.className = classe;
+    if (texto !== undefined) n.textContent = texto;
+    return n;
+  }
+
+  function mostrarToast(msg) {
+    if (!toastEl) return;
+    toastEl.textContent = msg;
+    toastEl.classList.add('visivel');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      toastEl.classList.remove('visivel');
+    }, 2200);
+  }
 
   function limpar(valor, max) {
-    return String(valor == null ? '' : valor)
-      .replace(/\r\n?/g, '\n')
-      .trim()
-      .slice(0, max);
+    return String(valor == null ? '' : valor).replace(/\r\n?/g, '\n').trim().slice(0, max);
   }
 
   function slugificar(texto) {
@@ -239,6 +546,41 @@ try{
     try { s = s.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); } catch (e) {}
     s = s.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
     return s || 'post';
+  }
+
+  function escaparHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function renderMarkdownSeguro(md) {
+    var html = '';
+    if (window.marked && typeof window.marked.parse === 'function') {
+      html = window.marked.parse(md);
+    } else {
+      html = md.split(/\n{2,}/).map(function (p) {
+        return '<p>' + escaparHtml(p).replace(/\n/g, '<br>') + '</p>';
+      }).join('');
+    }
+    if (window.DOMPurify && typeof window.DOMPurify.sanitize === 'function') {
+      return window.DOMPurify.sanitize(html, { USE_PROFILES: { html: true } });
+    }
+    return html;
+  }
+
+  function extrairResumo(md) {
+    return String(md || '')
+      .replace(/```[\s\S]*?```/g, ' ')
+      .replace(/`([^`]*)`/g, '$1')
+      .replace(/!\[.*?\]\(.*?\)/g, '')
+      .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
+      .replace(/^#{1,6}\s+/gm, '')
+      .replace(/[*_~>|-]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 
   function normalizar(listaBruta) {
@@ -252,8 +594,9 @@ try{
       var texto = limpar(item.texto, LIMITES.texto);
       var data = limpar(item.data, 20);
       var id = limpar(item.id, 80);
+      var autor = limpar(item.autor, 60) || 'Marcos Vinicius';
       if (titulo && texto) {
-        saida.push({ id: id, tag: tag, titulo: titulo, texto: texto, data: data });
+        saida.push({ id: id, tag: tag, titulo: titulo, texto: texto, data: data, autor: autor });
       }
     }
     return saida;
@@ -270,12 +613,12 @@ try{
     });
   }
 
-  function acharPost(slug) {
-    if (!slug) return null;
+  function acharPostIndice(slug) {
+    if (!slug) return -1;
     for (var i = 0; i < POSTS.length; i++) {
-      if (POSTS[i].id === slug) return POSTS[i];
+      if (POSTS[i].id === slug) return i;
     }
-    return null;
+    return -1;
   }
 
   function slugDoHash() {
@@ -288,160 +631,321 @@ try{
     return '#post/' + encodeURIComponent(post.id);
   }
 
-  function el(tag, classe, texto) {
-    var n = document.createElement(tag);
-    if (classe) n.className = classe;
-    if (texto !== undefined) n.textContent = texto;
-    return n;
-  }
-
   function minutosDeLeitura(texto) {
     var palavras = texto.split(/\s+/).filter(Boolean).length;
     return Math.max(1, Math.ceil(palavras / 200));
   }
 
-  function atualizarMetaTags(titulo, descricao) {
+  function atualizarSEO(titulo, descricao, post) {
     document.title = titulo;
-    var ogTitle = document.querySelector('meta[property="og:title"]');
-    var ogDesc = document.querySelector('meta[property="og:description"]');
-    var metaDesc = document.querySelector('meta[name="description"]');
-    if (ogTitle) ogTitle.setAttribute('content', titulo);
-    if (ogDesc) ogDesc.setAttribute('content', descricao);
-    if (metaDesc) metaDesc.setAttribute('content', descricao);
-  }
+    var seletores = [
+      ['meta[property="og:title"]', titulo],
+      ['meta[name="twitter:title"]', titulo],
+      ['meta[property="og:description"]', descricao],
+      ['meta[name="twitter:description"]', descricao],
+      ['meta[name="description"]', descricao],
+      ['meta[property="og:type"]', post ? 'article' : 'website']
+    ];
+    seletores.forEach(function (par) {
+      var node = document.querySelector(par[0]);
+      if (node) node.setAttribute('content', par[1]);
+    });
 
-  function aplicarHighlight() {
-    if (window.hljs) {
-      document.querySelectorAll('pre code').forEach(function (block) {
-        window.hljs.highlightElement(block);
-      });
+    var jsonLd = document.getElementById('json-ld');
+    if (!jsonLd) {
+      jsonLd = document.createElement('script');
+      jsonLd.type = 'application/ld+json';
+      jsonLd.id = 'json-ld';
+      document.head.appendChild(jsonLd);
     }
+    var dados = post ? {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: post.titulo,
+      description: descricao,
+      author: { '@type': 'Person', name: post.autor },
+      datePublished: post.data || undefined,
+      keywords: post.tag
+    } : {
+      '@context': 'https://schema.org',
+      '@type': 'Blog',
+      name: 'Terminal de Bolso',
+      description: DESCRICAO_BASE,
+      author: { '@type': 'Person', name: 'Marcos Vinicius' }
+    };
+    jsonLd.textContent = JSON.stringify(dados);
   }
 
-  function render() {
-    var hash = location.hash || '';
-    if (hash === '#mais') {
-      renderMaisPosts();
-      return;
-    }
-
-    var slug = slugDoHash();
-    var post = acharPost(slug);
-    if (slug && !post) slug = '';
-
-    slugExibido = slug;
-    if (post) renderPost(post);
-    else renderLista();
+  function alternarSecoesHome(mostrar) {
+    [secaoHero, secaoTerminal, secaoSobre, secaoContato].forEach(function (sec) {
+      if (sec) sec.classList.toggle('oculto', !mostrar);
+    });
+    buscaBox.classList.toggle('oculto', !mostrar);
+    tagsFiltroEl.classList.toggle('oculto', !mostrar);
+    tituloSecaoPosts.classList.toggle('oculto', !mostrar);
+    if (!mostrar) statusFiltroEl.classList.add('oculto');
   }
 
-  function renderLista() {
-    secaoPosts.classList.remove('modo-post');
-    atualizarMetaTags(TITULO_BASE, 'Linux, programação e hardware, explicados com calma.');
+  function atualizarNavAtivo() {
+    var hash = location.hash || '#posts';
+    document.querySelectorAll('header nav a').forEach(function (a) {
+      var href = a.getAttribute('href');
+      var ativo = (href === hash) || (href === '#posts' && (hash === '' || hash === '#topo' || hash.indexOf('#post/') === 0));
+      if (ativo) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+  }
 
-    var buscaEl = document.getElementById('busca');
-    var h2Posts = secaoPosts.querySelector('h2');
-    if (buscaEl) buscaEl.style.display = '';
-    if (h2Posts) h2Posts.style.display = '';
+  function renderTagsFiltro() {
+    var contagem = Object.create(null);
+    POSTS.forEach(function (p) {
+      contagem[p.tag] = (contagem[p.tag] || 0) + 1;
+    });
 
     var frag = document.createDocumentFragment();
-    var encontrados = POSTS.filter(function (p) {
-      if (!filtro) return true;
-      return (p.tag + ' ' + p.titulo + ' ' + p.texto).toLowerCase().indexOf(filtro) !== -1;
-    });
-
-    var limiteHome = encontrados;
-    var mostrarBotaoMais = false;
-    if (!filtro && encontrados.length > 3) {
-      limiteHome = encontrados.slice(0, 3);
-      mostrarBotaoMais = true;
-    }
-
-    if (!encontrados.length) {
-      frag.append(el('p', 'vazio', POSTS.length
-        ? 'Nenhum post combina com a busca.'
-        : 'Ainda não há posts publicados.'));
-    } else {
-      limiteHome.forEach(function (p) { frag.append(criarArtigo(p)); });
-      if (mostrarBotaoMais) {
-        var divMais = el('div');
-        divMais.style.marginTop = '1.5rem';
-        var linkMais = el('a', 'ler-mais', 'Ver todos os posts (Mais posts) →');
-        linkMais.href = '#mais';
-        divMais.append(linkMais);
-        frag.append(divMais);
-      }
-    }
-    lista.replaceChildren(frag);
-  }
-
-  function criarArtigo(post) {
-    var artigo = el('article');
-
-    var linha = el('div', 'linha');
-    var tagSpan = el('span', 'tag', post.tag);
-    tagSpan.addEventListener('click', function (e) {
-      e.preventDefault();
-      filtro = post.tag.toLowerCase();
-      if (busca) busca.value = post.tag;
+    var btnTodos = el('button', 'tag-btn' + (!filtroTag ? ' ativa' : ''), 'Todos (' + POSTS.length + ')');
+    btnTodos.type = 'button';
+    btnTodos.addEventListener('click', function () {
+      filtroTag = '';
       renderLista();
     });
-    linha.append(tagSpan);
+    frag.appendChild(btnTodos);
 
-    var partes = ['Por Marcos Vinicius'];
+    Object.keys(contagem).sort().forEach(function (tag) {
+      var ativa = filtroTag.toLowerCase() === tag.toLowerCase();
+      var btn = el('button', 'tag-btn' + (ativa ? ' ativa' : ''), tag + ' (' + contagem[tag] + ')');
+      btn.type = 'button';
+      btn.addEventListener('click', function () {
+        filtroTag = ativa ? '' : tag;
+        renderLista();
+      });
+      frag.appendChild(btn);
+    });
+
+    tagsFiltroEl.replaceChildren(frag);
+  }
+
+  function filtrarPosts() {
+    return POSTS.filter(function (p) {
+      var bateTag = !filtroTag || p.tag.toLowerCase() === filtroTag.toLowerCase();
+      var bateTexto = !filtroTexto || (p.tag + ' ' + p.titulo + ' ' + p.texto).toLowerCase().indexOf(filtroTexto) !== -1;
+      return bateTag && bateTexto;
+    });
+  }
+
+  function criarArtigoCard(post) {
+    var artigo = el('article', 'card-post');
+
+    var linha = el('div', 'linha');
+    var tagBtn = el('button', 'tag', post.tag);
+    tagBtn.type = 'button';
+    tagBtn.title = 'Filtrar por ' + post.tag;
+    tagBtn.addEventListener('click', function () {
+      filtroTag = post.tag;
+      if (slugExibido || location.hash === '#mais' || location.hash === '#privacidade') {
+        location.hash = '#posts';
+      } else {
+        renderLista();
+      }
+    });
+    linha.appendChild(tagBtn);
+
+    var partes = ['Por ' + post.autor];
     if (post.data) partes.push(post.data);
     partes.push(minutosDeLeitura(post.texto) + ' min de leitura');
-    linha.append(el('span', 'meta', partes.join(' · ')));
+    linha.appendChild(el('span', 'meta', partes.join(' · ')));
 
     var h3 = el('h3');
     var link = el('a', '', post.titulo);
     link.href = hrefDoPost(post);
-    h3.append(link);
+    h3.appendChild(link);
 
-    artigo.append(linha, h3);
-
-    // Resumo com classe CSS que corta rigidamente em 2 linhas
-    var resumoEl = el('div', 'resumo-home');
-    resumoEl.innerHTML = marked.parse(post.texto);
-    artigo.append(resumoEl);
+    var resumo = el('p', 'resumo-home', extrairResumo(post.texto));
 
     var mais = el('a', 'ler-mais', 'Ler post →');
     mais.href = hrefDoPost(post);
-    artigo.append(mais);
 
+    artigo.append(linha, h3, resumo, mais);
     return artigo;
   }
 
-  function renderMaisPosts() {
-    secaoPosts.classList.add('modo-post');
-    document.title = 'Mais posts — Terminal de Bolso';
+  function renderLista(mostrarTodos) {
+    var modoArquivo = !!mostrarTodos;
     slugExibido = '';
+    progressoEl.style.display = 'none';
 
-    var buscaEl = document.getElementById('busca');
-    var h2Posts = secaoPosts.querySelector('h2');
-    if (buscaEl) buscaEl.style.display = 'none';
-    if (h2Posts) h2Posts.style.display = 'none';
-
-    var artigo = el('article', 'post-completo');
-    var titulo = el('h2', 'titulo-post', 'Todos os posts');
-    artigo.append(titulo);
-
-    if (!POSTS.length) {
-      artigo.append(el('p', 'vazio', 'Ainda não há posts publicados.'));
+    if (modoArquivo) {
+      alternarSecoesHome(false);
+      buscaBox.classList.remove('oculto');
+      tagsFiltroEl.classList.remove('oculto');
+      tituloSecaoPosts.classList.remove('oculto');
+      tituloSecaoPosts.textContent = 'Arquivo — Todos os posts (' + POSTS.length + ')';
+      atualizarSEO('Arquivo — Terminal de Bolso', 'Todos os artigos publicados no Terminal de Bolso.');
     } else {
-      var listaPosts = el('div');
-      POSTS.forEach(function (p) {
-        listaPosts.append(criarArtigo(p));
-      });
-      artigo.append(listaPosts);
+      alternarSecoesHome(true);
+      tituloSecaoPosts.textContent = 'Últimos posts';
+      atualizarSEO(TITULO_BASE, DESCRICAO_BASE);
     }
 
-    var acoes = el('div', 'acoes-post');
-    var voltar = el('a', 'voltar', '← Voltar para a página inicial');
-    voltar.href = '#posts';
-    acoes.append(voltar);
-    artigo.append(acoes);
+    renderTagsFiltro();
+    limparBuscaBtn.classList.toggle('oculto', !filtroTexto);
 
-    lista.replaceChildren(artigo);
+    var encontrados = filtrarPosts();
+    var temFiltro = !!(filtroTexto || filtroTag);
+
+    if (temFiltro) {
+      statusFiltroEl.classList.remove('oculto');
+      var descFiltro = 'Mostrando ' + encontrados.length + (encontrados.length === 1 ? ' post' : ' posts');
+      if (filtroTag) descFiltro += ' em "' + filtroTag + '"';
+      if (filtroTexto) descFiltro += ' para "' + filtroTexto + '"';
+
+      var textoStatus = el('span', '', descFiltro);
+      var btnLimparTudo = el('button', 'btn-secundario', 'Limpar filtros');
+      btnLimparTudo.type = 'button';
+      btnLimparTudo.addEventListener('click', function () {
+        filtroTexto = '';
+        filtroTag = '';
+        busca.value = '';
+        renderLista(modoArquivo);
+      });
+      statusFiltroEl.replaceChildren(textoStatus, btnLimparTudo);
+    } else {
+      statusFiltroEl.classList.add('oculto');
+    }
+
+    var exibir = (!modoArquivo && !temFiltro && encontrados.length > 3)
+      ? encontrados.slice(0, 3)
+      : encontrados;
+
+    var frag = document.createDocumentFragment();
+    if (!encontrados.length) {
+      frag.appendChild(el('p', 'vazio', POSTS.length
+        ? 'Nenhum post encontrado com esses critérios.'
+        : 'Ainda não há posts publicados.'));
+    } else {
+      exibir.forEach(function (p) { frag.appendChild(criarArtigoCard(p)); });
+      if (!modoArquivo && !temFiltro && encontrados.length > 3) {
+        var divMais = el('div');
+        divMais.style.marginTop = '1.5rem';
+        var linkMais = el('a', 'ler-mais', 'Ver todos os ' + encontrados.length + ' posts no arquivo →');
+        linkMais.href = '#mais';
+        divMais.appendChild(linkMais);
+        frag.appendChild(divMais);
+      }
+    }
+
+    if (modoArquivo) {
+      var voltarDiv = el('div', 'acoes-post');
+      var voltar = el('a', 'voltar', '← Voltar para a página inicial');
+      voltar.href = '#posts';
+      voltarDiv.appendChild(voltar);
+      frag.appendChild(voltarDiv);
+    }
+
+    lista.replaceChildren(frag);
+  }
+
+  function prepararCodigoMarkdown(container) {
+    container.querySelectorAll('pre').forEach(function (pre) {
+      var code = pre.querySelector('code');
+      if (window.hljs && code) {
+        window.hljs.highlightElement(code);
+      }
+
+      var lang = '';
+      if (code && code.className) {
+        var m = /language-([a-z0-9_-]+)/i.exec(code.className);
+        if (m) lang = m[1];
+      }
+
+      var wrap = el('div', 'code-wrap');
+      var bar = el('div', 'code-bar');
+      bar.appendChild(el('span', '', lang || 'código'));
+
+      var btn = el('button', 'cp-code', 'Copiar');
+      btn.type = 'button';
+      btn.addEventListener('click', async function () {
+        var txt = (code || pre).textContent;
+        try {
+          await navigator.clipboard.writeText(txt);
+          btn.textContent = 'Copiado!';
+          mostrarToast('Código copiado!');
+          setTimeout(function () { btn.textContent = 'Copiar'; }, 2000);
+        } catch (e) {
+          mostrarToast('Não foi possível copiar.');
+        }
+      });
+      bar.appendChild(btn);
+
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.appendChild(bar);
+      wrap.appendChild(pre);
+    });
+
+    container.querySelectorAll('a[href^="http"]').forEach(function (a) {
+      a.setAttribute('target', '_blank');
+      a.setAttribute('rel', 'noopener noreferrer');
+    });
+  }
+
+  function construirSumario(container) {
+    var headings = container.querySelectorAll('h2, h3');
+    if (headings.length < 2) return null;
+
+    var details = el('details', 'toc');
+    details.open = true;
+    details.appendChild(el('summary', '', 'Neste artigo'));
+    var ul = el('ul');
+
+    headings.forEach(function (h, idx) {
+      var id = 'sec-' + idx + '-' + slugificar(h.textContent);
+      h.id = id;
+      var li = el('li', h.tagName === 'H3' ? 'toc-h3' : '');
+      var a = el('a', '', h.textContent);
+      a.href = '#';
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+
+    details.appendChild(ul);
+    return details;
+  }
+
+  function criarBarraCompartilhar(post) {
+    var box = el('div', 'compartilhar');
+    box.appendChild(el('span', '', 'Compartilhar:'));
+
+    var url = location.href;
+    var texto = post.titulo + ' — Terminal de Bolso';
+
+    var btnCopiar = el('button', 'share-btn', 'Copiar link');
+    btnCopiar.type = 'button';
+    btnCopiar.addEventListener('click', async function () {
+      try {
+        await navigator.clipboard.writeText(url);
+        mostrarToast('Link do post copiado!');
+      } catch (e) {}
+    });
+    box.appendChild(btnCopiar);
+
+    var redes = [
+      ['WhatsApp', 'https://wa.me/?text=' + encodeURIComponent(texto + ' ' + url)],
+      ['X / Twitter', 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(texto) + '&url=' + encodeURIComponent(url)],
+      ['LinkedIn', 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url)]
+    ];
+    redes.forEach(function (r) {
+      var a = el('a', 'share-btn', r[0]);
+      a.href = r[1];
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      box.appendChild(a);
+    });
+
+    return box;
   }
 
   function temaAtualGiscus() {
@@ -458,9 +962,9 @@ try{
     f.contentWindow.postMessage({ giscus: { setConfig: { theme: temaAtualGiscus() } } }, 'https://giscus.app');
   }
 
-  function carregarComentarios(post, artigo) {
+  function carregarComentarios(post, container) {
     var caixa = el('section', 'comentarios');
-    caixa.append(el('h3', '', 'Comentários'));
+    caixa.appendChild(el('h3', '', 'Comentários'));
     var s = document.createElement('script');
     s.src = 'https://giscus.app/client.js';
     var cfg = {
@@ -480,81 +984,256 @@ try{
     for (var k in cfg) s.setAttribute(k, cfg[k]);
     s.crossOrigin = 'anonymous';
     s.async = true;
-    caixa.append(s);
-    artigo.append(caixa);
+    caixa.appendChild(s);
+    container.appendChild(caixa);
   }
 
-  function renderPost(post) {
-    secaoPosts.classList.add('modo-post');
-    var resumoTexto = post.texto.replace(/[#*`_]/g, '').slice(0, 150) + '...';
-    atualizarMetaTags(post.titulo + ' — Terminal de Bolso', resumoTexto);
+  function renderPost(idx) {
+    var post = POSTS[idx];
+    slugExibido = post.id;
+    alternarSecoesHome(false);
+    progressoEl.style.display = 'block';
+    atualizarProgresso();
 
-    var buscaEl = document.getElementById('busca');
-    var h2Posts = secaoPosts.querySelector('h2');
-    if (buscaEl) buscaEl.style.display = 'none';
-    if (h2Posts) h2Posts.style.display = 'none';
+    var resumoDesc = extrairResumo(post.texto).slice(0, 155) + '...';
+    atualizarSEO(post.titulo + ' — Terminal de Bolso', resumoDesc, post);
+
+    var frag = document.createDocumentFragment();
+
+    // Breadcrumb
+    var bc = el('nav', 'breadcrumb');
+    bc.setAttribute('aria-label', 'Navegação estrutural');
+    var aHome = el('a', '', 'Início');
+    aHome.href = '#posts';
+    var aTag = el('a', '', post.tag);
+    aTag.href = '#posts';
+    aTag.addEventListener('click', function () { filtroTag = post.tag; });
+    bc.append(aHome, el('span', '', '›'), aTag, el('span', '', '›'), el('span', '', post.titulo));
+    frag.appendChild(bc);
 
     var artigo = el('article', 'post-completo');
 
     var linha = el('div', 'linha');
-    var tagSpan = el('span', 'tag', post.tag);
-    tagSpan.addEventListener('click', function () {
-      filtro = post.tag.toLowerCase();
-      if (busca) busca.value = post.tag;
+    var tagBtn = el('button', 'tag', post.tag);
+    tagBtn.type = 'button';
+    tagBtn.addEventListener('click', function () {
+      filtroTag = post.tag;
       location.hash = '#posts';
     });
-    linha.append(tagSpan);
+    linha.appendChild(tagBtn);
 
-    var partes = ['Por Marcos Vinicius'];
+    var partes = ['Por ' + post.autor];
     if (post.data) partes.push(post.data);
     partes.push(minutosDeLeitura(post.texto) + ' min de leitura');
-    linha.append(el('span', 'meta', partes.join(' · ')));
+    linha.appendChild(el('span', 'meta', partes.join(' · ')));
 
-    var titulo = el('h2', 'titulo-post', post.titulo);
+    var titulo = el('h1', 'titulo-post', post.titulo);
     artigo.append(linha, titulo);
 
-    // Renderiza o texto completo com Markdown
     var conteudo = el('div', 'conteudo-markdown');
-    conteudo.innerHTML = marked.parse(post.texto);
-    artigo.append(conteudo);
+    conteudo.innerHTML = renderMarkdownSeguro(post.texto);
+    prepararCodigoMarkdown(conteudo);
+
+    var toc = construirSumario(conteudo);
+    if (toc) artigo.appendChild(toc);
+    artigo.appendChild(conteudo);
+
+    artigo.appendChild(criarBarraCompartilhar(post));
+
+    // Box do autor
+    var autorBox = el('div', 'autor-box');
+    var av = el('div', 'autor-avatar', 'MV');
+    av.setAttribute('aria-hidden', 'true');
+    var info = el('div', 'autor-info');
+    info.appendChild(el('strong', '', 'Escrito por ' + post.autor));
+    info.appendChild(el('p', '', 'Autor do Terminal de Bolso. Escrevo guias práticos sobre Linux, código aberto, programação e hardware.'));
+    autorBox.append(av, info);
+    artigo.appendChild(autorBox);
+
+    // Post anterior e próximo
+    var prevPost = idx + 1 < POSTS.length ? POSTS[idx + 1] : null;
+    var nextPost = idx - 1 >= 0 ? POSTS[idx - 1] : null;
+    if (prevPost || nextPost) {
+      var navPosts = el('div', 'nav-posts');
+      if (prevPost) {
+        var cardPrev = el('a', 'nav-post-card');
+        cardPrev.href = hrefDoPost(prevPost);
+        cardPrev.append(el('small', '', '← Post anterior'), el('span', '', prevPost.titulo));
+        navPosts.appendChild(cardPrev);
+      }
+      if (nextPost) {
+        var cardNext = el('a', 'nav-post-card');
+        cardNext.href = hrefDoPost(nextPost);
+        cardNext.append(el('small', '', 'Próximo post →'), el('span', '', nextPost.titulo));
+        navPosts.appendChild(cardNext);
+      }
+      artigo.appendChild(navPosts);
+    }
+
+    // Posts relacionados (mesma tag)
+    var relacionados = POSTS.filter(function (p) {
+      return p.id !== post.id && p.tag.toLowerCase() === post.tag.toLowerCase();
+    }).slice(0, 2);
+    if (relacionados.length) {
+      var secRel = el('div', 'relacionados');
+      secRel.appendChild(el('h3', '', 'Leia também sobre ' + post.tag));
+      var gridRel = el('div', 'relacionados-grid');
+      relacionados.forEach(function (r) {
+        var card = el('a', 'rel-card');
+        card.href = hrefDoPost(r);
+        card.append(
+          el('small', '', (r.data ? r.data + ' · ' : '') + minutosDeLeitura(r.texto) + ' min'),
+          el('strong', '', r.titulo)
+        );
+        gridRel.appendChild(card);
+      });
+      secRel.appendChild(gridRel);
+      artigo.appendChild(secRel);
+    }
 
     var acoes = el('div', 'acoes-post');
     var voltar = el('a', 'voltar', '← Voltar para os posts');
     voltar.href = '#posts';
-    acoes.append(voltar);
-    artigo.append(acoes);
+    var irArquivo = el('a', 'voltar', 'Ver todos os posts →');
+    irArquivo.href = '#mais';
+    acoes.append(voltar, irArquivo);
+    artigo.appendChild(acoes);
 
-    lista.replaceChildren(artigo);
-    aplicarHighlight();
     carregarComentarios(post, artigo);
+    frag.appendChild(artigo);
+    lista.replaceChildren(frag);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
+  function render404(slug) {
+    slugExibido = '';
+    alternarSecoesHome(false);
+    progressoEl.style.display = 'none';
+    atualizarSEO('Post não encontrado — Terminal de Bolso', DESCRICAO_BASE);
+
+    var box = el('div', 'box-404');
+    box.appendChild(el('h1', '', 'bash: ' + slug + ': post não encontrado (404)'));
+    box.appendChild(el('p', '', 'O artigo que você procurou pode ter sido movido ou o endereço está incorreto.'));
+    var voltar = el('a', 'ler-mais', '← Voltar para a página inicial');
+    voltar.href = '#posts';
+    box.appendChild(voltar);
+    lista.replaceChildren(box);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function renderPrivacidade() {
+    slugExibido = '';
+    alternarSecoesHome(false);
+    progressoEl.style.display = 'none';
+    atualizarSEO('Privacidade e Licença — Terminal de Bolso', 'Política de privacidade e licença de conteúdo do Terminal de Bolso.');
+
+    var artigo = el('article', 'post-completo');
+    artigo.appendChild(el('h1', 'titulo-post', 'Privacidade e Licença'));
+
+    var corpo = el('div', 'conteudo-markdown');
+    corpo.innerHTML =
+      '<p>O <strong>Terminal de Bolso</strong> respeita a sua privacidade. Este site é estático e não utiliza rastreadores publicitários, analytics invasivos ou cookies de rastreamento.</p>' +
+      '<h2>Armazenamento local</h2>' +
+      '<p>Guardamos apenas a sua preferência de tema (claro ou escuro) no <code>localStorage</code> do navegador para manter sua escolha entre visitas.</p>' +
+      '<h2>Comentários</h2>' +
+      '<p>Os comentários são carregados via <strong>Giscus</strong> (baseado no GitHub Discussions). Ao comentar, você interage diretamente com a plataforma do GitHub sob os termos e políticas deles.</p>' +
+      '<h2>Licença do conteúdo</h2>' +
+      '<p>Salvo indicação contrária, os códigos e exemplos deste blog podem ser reutilizados livremente em seus estudos e projetos pessoais.</p>';
+
+    var acoes = el('div', 'acoes-post');
+    var voltar = el('a', 'voltar', '← Voltar para a página inicial');
+    voltar.href = '#posts';
+    acoes.appendChild(voltar);
+
+    artigo.append(corpo, acoes);
+    lista.replaceChildren(artigo);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function render() {
+    atualizarNavAtivo();
+    var hash = location.hash || '';
+
+    if (hash === '#mais') {
+      renderLista(true);
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      return;
+    }
+
+    if (hash === '#privacidade') {
+      renderPrivacidade();
+      return;
+    }
+
+    var slug = slugDoHash();
+    if (slug) {
+      var idx = acharPostIndice(slug);
+      if (idx !== -1) renderPost(idx);
+      else render404(slug);
+      return;
+    }
+
+    renderLista(false);
+
+    if (hash && hash !== '#posts' && hash !== '#topo') {
+      var alvo = document.querySelector(hash);
+      if (alvo) {
+        setTimeout(function () { alvo.scrollIntoView({ behavior: 'smooth' }); }, 30);
+      }
+    }
+  }
+
+  function atualizarProgresso() {
+    if (!slugExibido) return;
+    var docH = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = docH > 0 ? Math.min(100, Math.max(0, (window.scrollY / docH) * 100)) : 0;
+    progressoEl.style.width = pct.toFixed(1) + '%';
+  }
+
+  // Carregamento dos posts
   fetch('posts.json')
-    .then(function(res) {
-      if (!res.ok) throw new Error('Erro ao carregar JSON');
+    .then(function (res) {
+      if (!res.ok) throw new Error('Erro HTTP ' + res.status);
       return res.json();
     })
-    .then(function(data) {
+    .then(function (data) {
       POSTS = normalizar(data).reverse();
       atribuirIds();
       render();
     })
-    .catch(function(err) {
+    .catch(function (err) {
       console.error(err);
-      lista.replaceChildren(el('p', 'vazio', 'Erro ao carregar os posts. Verifique se o arquivo posts.json existe.'));
+      lista.replaceChildren(el('p', 'vazio', 'Erro ao carregar os posts. Verifique se o arquivo posts.json está acessível.'));
     });
 
-  if (busca) {
-    busca.addEventListener('input', function () {
-      filtro = busca.value.trim().toLowerCase();
-      if (!slugExibido) renderLista();
-    });
-  }
-
-  window.addEventListener('hashchange', function () {
-    render();
+  // Eventos de busca
+  busca.addEventListener('input', function () {
+    filtroTexto = busca.value.trim().toLowerCase();
+    renderLista(location.hash === '#mais');
   });
 
+  limparBuscaBtn.addEventListener('click', function () {
+    filtroTexto = '';
+    busca.value = '';
+    busca.focus();
+    renderLista(location.hash === '#mais');
+  });
+
+  window.addEventListener('hashchange', render);
+
+  // Scroll: progresso de leitura e botão voltar ao topo
+  window.addEventListener('scroll', function () {
+    atualizarProgresso();
+    if (voltarTopoBtn) {
+      voltarTopoBtn.classList.toggle('visivel', window.scrollY > 360);
+    }
+  }, { passive: true });
+
+  voltarTopoBtn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Copiar comandos no "Cantinho do terminal"
   document.querySelectorAll('.cp').forEach(function (btn) {
     btn.addEventListener('click', async function () {
       var cmd = btn.closest('.cmd');
@@ -563,11 +1242,29 @@ try{
       try {
         await navigator.clipboard.writeText(code.textContent);
         btn.textContent = 'Copiado!';
+        mostrarToast('Comando copiado!');
         setTimeout(function () { btn.textContent = 'Copiar'; }, 2000);
       } catch (e) {}
     });
   });
 
+  // Menu mobile
+  var menuBtn = document.getElementById('menu-btn');
+  var nav = document.getElementById('menu-principal');
+  if (menuBtn && nav) {
+    menuBtn.addEventListener('click', function () {
+      var aberto = nav.classList.toggle('aberto');
+      menuBtn.setAttribute('aria-expanded', String(aberto));
+    });
+    nav.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        nav.classList.remove('aberto');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  // Tema claro/escuro com atualização de botão e meta theme-color
   (function iniciarTema() {
     var botao = document.getElementById('tema');
     if (!botao) return;
@@ -580,15 +1277,23 @@ try{
       return (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
     }
 
+    function atualizarBotao() {
+      var modo = atual();
+      botao.textContent = modo === 'dark' ? '☀ Claro' : '☾ Escuro';
+      botao.setAttribute('aria-label', modo === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro');
+    }
+
+    atualizarBotao();
+
     botao.addEventListener('click', function () {
       var novo = atual() === 'dark' ? 'light' : 'dark';
       raiz.dataset.theme = novo;
       try { localStorage.setItem('tema', novo); } catch (e) {}
+      atualizarBotao();
       atualizarTemaComentarios();
     });
   })();
-
-})();
+});
 </script>
 </body>
 </html>
