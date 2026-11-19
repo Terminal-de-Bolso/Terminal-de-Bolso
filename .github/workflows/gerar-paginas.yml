@@ -1,0 +1,53 @@
+# Gera as páginas de cada post automaticamente.
+# Roda sempre que o posts.json, o index.html ou o gerar_posts.py mudarem.
+name: Gerar páginas dos posts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - posts.json
+      - index.html
+      - gerar_posts.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: gerar-paginas
+  cancel-in-progress: false
+
+jobs:
+  gerar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar biblioteca de Markdown
+        run: pip install markdown-it-py
+
+      - name: Gerar páginas, sitemap e robots
+        run: python3 gerar_posts.py --site https://terminal-de-bolso.github.io/Terminal-de-Bolso
+
+      - name: Enviar mudanças
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A post sitemap.xml robots.txt
+          if git diff --cached --quiet; then
+            echo "Nada para atualizar."
+          else
+            git commit -m "Atualiza páginas dos posts"
+            git pull --rebase
+            git push
+            # Pede para o publicador do site (jekyll-gh-pages.yml) rodar de novo
+            gh workflow run jekyll-gh-pages.yml --ref main
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
