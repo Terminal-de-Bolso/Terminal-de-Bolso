@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<!-- gerado por gerar_posts.py -->
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
+<title>Menos Bloatware, Mais Privacidade: Limpando o Android via ADB e F-Droid — Terminal de Bolso</title>
+<meta name="description" content="A maioria dos smartphones Android sai da fábrica abarrotada de aplicações pré instaladas que não pediste: serviços do fabricante, utilitários que recolhem ...">
+<meta name="author" content="Marcos Vinicius">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Terminal de Bolso">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Menos Bloatware, Mais Privacidade: Limpando o Android via ADB e F-Droid — Terminal de Bolso">
+<meta property="og:description" content="A maioria dos smartphones Android sai da fábrica abarrotada de aplicações pré instaladas que não pediste: serviços do fabricante, utilitários que recolhem ...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Menos Bloatware, Mais Privacidade: Limpando o Android via ADB e F-Droid — Terminal de Bolso">
+<meta name="twitter:description" content="A maioria dos smartphones Android sai da fábrica abarrotada de aplicações pré instaladas que não pediste: serviços do fabricante, utilitários que recolhem ...">
+<link rel="canonical" href="https://terminal-de-bolso.github.io/Terminal-de-Bolso/post/menos-bloatware-mais-privacidade-limpando-o-android-via-adb-/">
+<meta property="og:url" content="https://terminal-de-bolso.github.io/Terminal-de-Bolso/post/menos-bloatware-mais-privacidade-limpando-o-android-via-adb-/">
+<link rel="icon" type="image/png" href="../../favicon.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Menos Bloatware, Mais Privacidade: Limpando o Android via ADB e F-Droid", "description": "A maioria dos smartphones Android sai da fábrica abarrotada de aplicações pré instaladas que não pediste: serviços do fabricante, utilitários que recolhem ...", "author": {"@type": "Person", "name": "Marcos Vinicius"}, "keywords": "Android", "mainEntityOfPage": "https://terminal-de-bolso.github.io/Terminal-de-Bolso/post/menos-bloatware-mais-privacidade-limpando-o-android-via-adb-/"}</script>
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous" defer></script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+
+:root{
+  --bg:#ffffff;
+  --surface:#f4f7f5;
+  --surface-2:#ebf1ed;
+  --ink:#111827;
+  --muted:#4b5563;
+  --accent:#2f7d4f;
+  --line:#e5e7eb;
+  --pastel:#b8e6c4;
+  --onpastel:#12361f;
+  --erro:#b91c1c;
+  --radius:8px;
+  /* Syntax Highlight (Claro) */
+  --hl-kw:#8b2671;
+  --hl-str:#1c6b3b;
+  --hl-num:#9a4d00;
+  --hl-fn:#1d4ed8;
+  --hl-com:#6b7280;
+  --hl-var:#b45309;
+  color-scheme:light dark;
+}
+
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1115;
+    --surface:#161a20;
+    --surface-2:#1d222a;
+    --ink:#f3f4f6;
+    --muted:#a3adb8;
+    --accent:#8fd6a4;
+    --line:#2a303a;
+    --pastel:#a8e0b8;
+    --onpastel:#0d2917;
+    --erro:#fca5a5;
+    /* Syntax Highlight (Escuro) */
+    --hl-kw:#f472b6;
+    --hl-str:#8fd6a4;
+    --hl-num:#fbbf24;
+    --hl-fn:#93c5fd;
+    --hl-com:#7e8a9a;
+    --hl-var:#fdba74;
+  }
+}
+
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0f1115;
+  --surface:#161a20;
+  --surface-2:#1d222a;
+  --ink:#f3f4f6;
+  --muted:#a3adb8;
+  --accent:#8fd6a4;
+  --line:#2a303a;
+  --pastel:#a8e0b8;
+  --onpastel:#0d2917;
+  --erro:#fca5a5;
+  --hl-kw:#f472b6;
+  --hl-str:#8fd6a4;
+  --hl-num:#fbbf24;
+  --hl-fn:#93c5fd;
+  --hl-com:#7e8a9a;
+  --hl-var:#fdba74;
+}
+
+:root[data-theme="light"]{color-scheme:light}
+
+html{scroll-behavior:smooth;scroll-padding-top:1.5rem;-webkit-text-size-adjust:100%}
+
+body{
+  margin:0;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  background:var(--bg);
+  color:var(--ink);
+  font:1.08rem/1.85 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  letter-spacing:.01em;
+  -webkit-font-smoothing:antialiased;
+}
+
+::selection{background:var(--pastel);color:var(--onpastel)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+.skip-link{
+  position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;
+  background:var(--pastel);color:var(--onpastel);font-weight:700;padding:.5rem 1rem;border-radius:6px;z-index:1000;
+}
+.skip-link:focus{left:1rem;top:1rem;width:auto;height:auto}
+
+/* Barra de progresso de leitura */
+#progresso-leitura{
+  position:fixed;top:0;left:0;height:3px;width:0%;
+  background:var(--accent);z-index:999;transition:width .1s linear;display:none;
+}
+
+.wrap{max-width:46rem;margin-inline:auto;padding-inline:1.25rem}
+
+/* Cabeçalho */
+header{border-bottom:3px solid var(--ink);padding:1.15rem 0;background:var(--bg)}
+header .wrap{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+
+.logo{font-weight:800;font-size:1.5rem;line-height:1;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+.logo span{background:var(--pastel);color:var(--onpastel);padding:.08rem .3rem;border-radius:4px}
+
+.nav-acoes{display:flex;align-items:center;gap:.75rem}
+#menu-btn{display:none;padding:.3rem .75rem;font-size:.9rem}
+
+nav{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem 1.15rem}
+nav a{color:var(--ink);font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;text-decoration:none}
+nav a:hover,nav a[aria-current="page"]{color:var(--accent);text-decoration:underline;text-underline-offset:4px}
+
+/* Hero */
+.hero{padding:3.5rem 0 2.5rem}
+.hero h1{font-weight:800;font-size:clamp(2.1rem,7vw,3.3rem);line-height:1.15;letter-spacing:-.02em;margin:0 0 1.25rem}
+.hero p{color:var(--muted);max-width:34rem;margin:0}
+
+.prompt{font:1rem/1.6 ui-monospace,"DejaVu Sans Mono",monospace;color:var(--accent);margin-bottom:1.25rem}
+.cursor{display:inline-block;width:.6em;height:1.1em;background:var(--pastel);outline:1px solid var(--accent);vertical-align:text-bottom;animation:blink 1.1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+
+section.bloco{padding:1.5rem 0 2.5rem}
+.secao-titulo{
+  font-size:1rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--muted);border-bottom:2px solid var(--ink);padding-bottom:.5rem;margin:0 0 1.5rem;
+}
+
+/* Busca e filtros */
+#busca{margin-bottom:1rem}
+#busca label{display:block;margin-bottom:.35rem;color:var(--muted);font-size:.9rem;font-weight:600}
+.busca-box{display:flex;gap:.5rem;align-items:center}
+.busca-box input{
+  flex:1;width:100%;font:inherit;line-height:1.5;padding:.55rem .85rem;
+  border:1px solid var(--line);border-radius:var(--radius);background:var(--bg);color:var(--ink);
+}
+.btn-secundario{
+  background:var(--surface);color:var(--ink);border:1px solid var(--line);
+  padding:.5rem .85rem;font-size:.88rem;border-radius:var(--radius);
+}
+.btn-secundario:hover{background:var(--surface-2);filter:none}
+
+.tags-filtro{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.25rem}
+.tag-btn{
+  background:var(--surface);color:var(--muted);border:1px solid var(--line);
+  border-radius:999px;padding:.2rem .75rem;font-size:.78rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.05em;transition:all .15s;
+}
+.tag-btn:hover{border-color:var(--accent);color:var(--ink);filter:none}
+.tag-btn.ativa{background:var(--pastel);color:var(--onpastel);border-color:transparent}
+
+.status-filtro{font-size:.9rem;color:var(--muted);margin:0 0 1rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+
+/* Cards de posts */
+article.card-post{border-bottom:1px solid var(--line);padding:1.6rem 0}
+article.card-post:last-of-type{border-bottom:0}
+article.card-post h3{font-size:1.4rem;font-weight:800;line-height:1.3;margin:0 0 .6rem;letter-spacing:-.01em}
+article.card-post h3 a{color:inherit;text-decoration:none}
+article.card-post h3 a:hover{color:var(--accent);text-decoration:underline}
+
+.resumo-home{
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  margin:0 0 .85rem;color:var(--muted);font-size:1rem;line-height:1.65;
+}
+
+.linha{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem .75rem;margin-bottom:.65rem}
+.meta{font-size:.9rem;color:var(--muted)}
+.tag{
+  display:inline-block;background:var(--pastel);color:var(--onpastel);border-radius:999px;
+  padding:.1rem .7rem;font-size:.76rem;font-weight:800;line-height:1.7;
+  text-transform:uppercase;letter-spacing:.07em;cursor:pointer;border:0;text-decoration:none;
+}
+.tag:hover{opacity:.85}
+
+.ler-mais{display:inline-block;margin-top:.2rem;font-weight:700;font-size:.95rem;color:var(--accent);text-decoration:none;border-bottom:2px solid transparent}
+.ler-mais:hover{border-bottom-color:var(--accent)}
+
+/* Modo Post Completo / Arquivo / Privacidade */
+.oculto{display:none !important}
+
+.breadcrumb{display:flex;align-items:center;flex-wrap:wrap;gap:.4rem;font-size:.88rem;color:var(--muted);margin:1.5rem 0 1rem}
+.breadcrumb a{color:var(--accent);text-decoration:none;font-weight:600}
+.breadcrumb a:hover{text-decoration:underline}
+
+.post-completo{padding:0 0 2rem}
+.titulo-post{font-size:clamp(1.75rem,5vw,2.5rem);font-weight:800;line-height:1.2;letter-spacing:-.02em;margin:.35rem 0 1.25rem;color:var(--ink)}
+
+/* Sumário automático */
+.toc{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:.9rem 1.15rem;margin:1.5rem 0;
+}
+.toc summary{font-weight:800;font-size:.9rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);cursor:pointer}
+.toc ul{margin:.75rem 0 0;padding-left:1.2rem;list-style:disc}
+.toc li{margin:.25rem 0;font-size:.95rem}
+.toc li.toc-h3{margin-left:1rem;font-size:.9rem}
+.toc a{color:var(--ink);text-decoration:none}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+
+/* Conteúdo Markdown */
+.conteudo-markdown{margin-top:1.5rem}
+.conteudo-markdown h2{font-size:1.45rem;font-weight:800;margin:2rem 0 .8rem;color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:.35rem;text-transform:none;letter-spacing:-.01em}
+.conteudo-markdown h3{font-size:1.2rem;font-weight:700;margin:1.5rem 0 .6rem;color:var(--ink)}
+.conteudo-markdown p{margin:0 0 1.15rem;color:var(--ink)}
+.conteudo-markdown ul,.conteudo-markdown ol{margin:0 0 1.2rem;padding-left:1.4rem}
+.conteudo-markdown li{margin:.35rem 0}
+.conteudo-markdown a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.conteudo-markdown img{max-width:100%;height:auto;border-radius:var(--radius);border:1px solid var(--line);margin:1.25rem 0;display:block}
+.conteudo-markdown hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
+.conteudo-markdown blockquote{
+  border-left:4px solid var(--accent);background:var(--surface);
+  margin:1.25rem 0;padding:.85rem 1.1rem;border-radius:0 var(--radius) var(--radius) 0;color:var(--muted);
+}
+.conteudo-markdown blockquote p:last-child{margin-bottom:0}
+.conteudo-markdown table{width:100%;border-collapse:collapse;margin:1.25rem 0;font-size:.95rem;display:block;overflow-x:auto}
+.conteudo-markdown th,.conteudo-markdown td{border:1px solid var(--line);padding:.55rem .75rem;text-align:left}
+.conteudo-markdown th{background:var(--surface);font-weight:700}
+
+.code-wrap{position:relative;margin:1.25rem 0}
+.code-bar{
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--surface-2);border:1px solid var(--line);border-bottom:0;
+  border-radius:var(--radius) var(--radius) 0 0;padding:.3rem .75rem;font-size:.78rem;color:var(--muted);
+  font-family:ui-monospace,"DejaVu Sans Mono",monospace;
+}
+.cp-code{padding:.18rem .6rem;font-size:.75rem;border-radius:4px}
+.conteudo-markdown pre{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:0 0 var(--radius) var(--radius);padding:1rem;overflow-x:auto;margin:0;
+  font-size:.92rem;line-height:1.6;
+}
+.conteudo-markdown code{font-family:ui-monospace,"DejaVu Sans Mono",monospace}
+.conteudo-markdown :not(pre) > code{
+  background:var(--surface);border:1px solid var(--line);padding:.12rem .38rem;border-radius:4px;font-size:.9em;
+}
+
+/* Highlight.js tokens com variáveis */
+.hljs-keyword,.hljs-selector-tag,.hljs-built_in{color:var(--hl-kw);font-weight:600}
+.hljs-string,.hljs-attr,.hljs-addition{color:var(--hl-str)}
+.hljs-number,.hljs-literal{color:var(--hl-num)}
+.hljs-title,.hljs-section,.hljs-name{color:var(--hl-fn);font-weight:600}
+.hljs-comment,.hljs-quote{color:var(--hl-com);font-style:italic}
+.hljs-variable,.hljs-template-variable,.hljs-attribute{color:var(--hl-var)}
+
+/* Compartilhamento, Autor, Navegação e Relacionados */
+.compartilhar{
+  display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;
+  margin:2rem 0;padding:1rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+.compartilhar span{font-size:.9rem;font-weight:700;color:var(--muted);margin-right:.25rem}
+.share-btn{
+  display:inline-flex;align-items:center;gap:.35rem;
+  background:var(--surface);color:var(--ink);border:1px solid var(--line);
+  border-radius:6px;padding:.35rem .75rem;font-size:.84rem;font-weight:600;text-decoration:none;cursor:pointer;
+}
+.share-btn:hover{border-color:var(--accent);color:var(--accent);filter:none}
+
+.autor-box{
+  display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.25rem;margin:1.5rem 0;
+}
+.autor-avatar{
+  width:3.2rem;height:3.2rem;border-radius:50%;background:var(--pastel);color:var(--onpastel);
+  display:grid;place-items:center;font-weight:800;font-size:1.15rem;flex-shrink:0;
+}
+.autor-info{flex:1;min-width:14rem}
+.autor-info strong{display:block;font-size:1.05rem;margin-bottom:.25rem}
+.autor-info p{margin:0;color:var(--muted);font-size:.95rem;line-height:1.55}
+
+.nav-posts{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:1rem;margin:1.5rem 0}
+.nav-post-card{
+  display:block;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:.9rem 1rem;text-decoration:none;color:var(--ink);
+}
+.nav-post-card:hover{border-color:var(--accent)}
+.nav-post-card small{display:block;color:var(--muted);font-size:.8rem;margin-bottom:.2rem}
+.nav-post-card span{font-weight:700;font-size:.98rem;line-height:1.3;display:block}
+
+.relacionados{margin:2rem 0}
+.relacionados h3{font-size:1.05rem;margin:0 0 .85rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.relacionados-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.85rem}
+.rel-card{
+  display:block;padding:.85rem 1rem;border:1px solid var(--line);border-radius:var(--radius);
+  text-decoration:none;color:var(--ink);
+}
+.rel-card:hover{border-color:var(--accent);background:var(--surface)}
+.rel-card small{display:block;color:var(--muted);font-size:.8rem;margin-bottom:.2rem}
+.rel-card strong{font-size:.98rem;line-height:1.35;display:block}
+
+.acoes-post{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid var(--line)}
+.voltar{color:var(--accent);font-weight:700;text-decoration:none}
+.voltar:hover{text-decoration:underline}
+
+.comentarios{margin-top:2.25rem;padding-top:1.5rem;border-top:1px solid var(--line)}
+.comentarios h3{font-size:1.2rem;margin:0 0 1rem}
+
+/* Cantinho do terminal, Sobre e Contato */
+.cmd{display:flex;align-items:center;gap:.75rem 1rem;flex-wrap:wrap;padding:.85rem 0;border-bottom:1px solid var(--line)}
+.cmd:last-child{border-bottom:0}
+.cmd code{font:.95rem/1.5 ui-monospace,"DejaVu Sans Mono",monospace;padding:.22rem .65rem;border-radius:6px;background:var(--pastel);color:var(--onpastel)}
+.cmd span{flex:1 1 12rem;color:var(--muted);font-size:.98rem}
+.cp{margin:0;padding:.3rem .9rem;font-size:.86rem}
+
+.contato-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:1rem;margin-top:1rem}
+.contato-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem;
+}
+.contato-card h3{margin:0 0 .35rem;font-size:1rem}
+.contato-card p{margin:0 0 .75rem;color:var(--muted);font-size:.92rem;line-height:1.5}
+.contato-card a{color:var(--accent);font-weight:700;font-size:.92rem;text-decoration:none}
+.contato-card a:hover{text-decoration:underline}
+
+/* Botões gerais */
+button{font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:6px;padding:.5rem 1.15rem;background:var(--pastel);color:var(--onpastel)}
+button:hover{filter:brightness(1.06)}
+#tema{margin:0;padding:.3rem .85rem;font-size:.86rem}
+
+.vazio{color:var(--muted);font-style:italic;padding:1.25rem 0;margin:0}
+
+/* Erro 404 */
+.box-404{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.5rem;margin:2rem 0;font-family:ui-monospace,"DejaVu Sans Mono",monospace;
+}
+.box-404 h1{font-size:1.35rem;margin:0 0 .6rem;color:var(--erro)}
+.box-404 p{font-family:system-ui,sans-serif;color:var(--muted);margin:0 0 1rem}
+
+/* Rodapé e utilidades */
+footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-size:.92rem;margin-top:1rem}
+.footer-grid{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-links{display:flex;flex-wrap:wrap;gap:.5rem 1.15rem}
+.footer-links a{color:var(--muted);text-decoration:none;font-weight:600}
+.footer-links a:hover{color:var(--accent);text-decoration:underline}
+
+#voltar-topo{
+  position:fixed;right:1.25rem;bottom:1.25rem;z-index:90;
+  padding:.55rem .85rem;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.15);
+  font-size:.88rem;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;transform:translateY(8px);
+}
+#voltar-topo.visivel{opacity:1;pointer-events:auto;transform:translateY(0)}
+
+#toast{
+  position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%) translateY(16px);
+  background:var(--ink);color:var(--bg);padding:.5rem 1.1rem;border-radius:999px;
+  font-size:.88rem;font-weight:600;opacity:0;pointer-events:none;z-index:1000;
+  transition:opacity .2s,transform .2s;
+}
+#toast.visivel{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:640px){
+  #menu-btn{display:inline-block}
+  nav{display:none;width:100%;padding-top:.75rem;border-top:1px solid var(--line);flex-direction:column;align-items:flex-start;gap:.65rem}
+  nav.aberto{display:flex}
+}
+</style>
+<script>
+try {
+  var temaSalvo = localStorage.getItem('tema');
+  if (temaSalvo === 'dark' || temaSalvo === 'light') { document.documentElement.dataset.theme = temaSalvo; }
+} catch (e) {}
+</script>
+</head>
+<body>
+
+<a class="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="../../">Terminal <span>de Bolso</span></a>
+    <div class="nav-acoes">
+      <button id="tema" type="button" aria-label="Alternar tema">Tema</button>
+      <button id="menu-btn" type="button" aria-expanded="false" aria-controls="menu-principal">Menu</button>
+    </div>
+    <nav id="menu-principal" aria-label="Menu principal">
+      <a href="../../#posts">Posts</a>
+      <a href="../../#mais">Arquivo</a>
+      <a href="../../#terminal">Terminal</a>
+      <a href="../../#sobre">Sobre</a>
+      <a href="../../#contato">Contato</a>
+    </nav>
+  </div>
+</header>
+
+<main id="conteudo-principal" class="wrap">
+  <nav class="breadcrumb" aria-label="Navegação estrutural">
+    <a href="../../#posts">Início</a><span>›</span><span>Android</span><span>›</span><span>Menos Bloatware, Mais Privacidade: Limpando o Android via ADB e F-Droid</span>
+  </nav>
+
+  <article class="post-completo">
+    <div class="linha">
+      <span class="tag">Android</span>
+      <span class="meta">Por Marcos Vinicius · 11/11/2026 · 3 min de leitura</span>
+    </div>
+    <h1 class="titulo-post">Menos Bloatware, Mais Privacidade: Limpando o Android via ADB e F-Droid</h1>
+    
+    <div class="conteudo-markdown">
+<p>A maioria dos smartphones Android sai da fábrica abarrotada de aplicações pré-instaladas que não pediste: serviços do fabricante, utilitários que recolhem rastreios em segundo plano e apps de redes sociais que não podem ser desinstaladas pela interface comum.</p>
+<p>Além de consumirem bateria e armazenamento, estas aplicações afetam a tua privacidade. Felizmente, é possível fazer uma limpa profunda no sistema sem precisar de acesso root, usando apenas o ADB e substituindo a tralha por alternativas FOSS (Free and Open Source Software).
+🧰 O que é o ADB e por que usá-lo?</p>
+<p>O ADB (Android Debug Bridge) é uma ferramenta oficial de linha de comandos que permite comunicar diretamente com o sistema operativo do telemóvel a partir do computador.</p>
+<p>Através dele, podes desinstalar ou desativar qualquer pacote de aplicação do utilizador principal (user 0), mesmo aqueles em que o botão &quot;Desinstalar&quot; aparece cinzento na lista de definições.
+🔨 Passo 1: Preparar o dispositivo e o computador</p>
+<div class="code-wrap"><div class="code-bar"><span>código</span><button class="cp-code" type="button">Copiar</button></div><pre><code>No celular:
+
+    Vai a Definições &gt; Sobre o telefone e toca 7 vezes em Número de compilação para ativar as Opções de programador.
+
+    Abre as Opções de programador e ativa a Depuração USB.
+
+No PC (Linux):
+
+    Instala as ferramentas do Android via terminal:
+    Bash
+
+    sudo apt install android-tools-adb  # Debian/Ubuntu/Linux Mint
+
+Conecta o telemóvel ao PC por cabo e confirma a permissão de depuração no ecrã do telemóvel ao rodar:
+Bash
+
+adb devices
+</code></pre></div>
+<p>🧹 Passo 2: Remover o bloatware da fábrica</p>
+<p>Em vez de remover aplicações uma a uma manualmente, a forma mais segura e transparente é utilizar o Universal Android Debloater (UAD), uma ferramenta de código aberto com interface gráfica que identifica o que pode ser removido em segurança sem quebrar o sistema.</p>
+<p>Se preferires fazer direto pelo terminal sem ferramentas extra, podes listar e remover pacotes específicos:</p>
+<div class="code-wrap"><div class="code-bar"><span>código</span><button class="cp-code" type="button">Copiar</button></div><pre><code>Listar pacotes instalados:
+Bash
+
+adb shell pm list packages
+
+Remover um pacote específico para o teu utilizador:
+Bash
+
+adb shell pm uninstall --user 0 NOME_DO_PACOTE
+
+(Substitui NOME_DO_PACOTE pelo ID da app, como com.google.android.youtube ou serviços de rastreio da fabricante).
+
+Nota de segurança: Se removeres algo por engano e o sistema apresentar comportamento estranho, podes reverter a remoção a qualquer momento com o comando:
+adb shell cmd package install-existing NOME_DO_PACOTE
+</code></pre></div>
+<p>🛡️ Passo 3: Adotar o ecossistema FOSS</p>
+<p>Depois de limpar o lixo de fábrica, substitui as aplicações do dia a dia por alternativas focadas em privacidade e código aberto:</p>
+<div class="code-wrap"><div class="code-bar"><span>código</span><button class="cp-code" type="button">Copiar</button></div><pre><code>Loja de aplicações: Instala o F-Droid (o repositório principal de software livre para Android) ou a Aurora Store (para descarregar apps da Play Store com navegação anónima, sem necessidade de conta Google ativa).
+
+Aplicações essenciais recomendadas:
+
+    Navegador: Firefox ou Mull (fork focado em privacidade do Firefox).
+
+    Teclado: FUTO Keyboard ou OpenBoard (evitam que o que digitas seja enviado para servidores de telemetria).
+
+    Utilitários (Galeria, Calendário, Ficheiros): Suíte do Fossify (forks modernos e mantidos das antigas Simple Mobile Tools).
+
+    Gestor de Ficheiros: Material Files.
+
+    Leitor de Música / Conteúdo: SimpMusic ou NewPipe.
+</code></pre></div>
+<p>🎯 Resultado Prático</p>
+<p>Com esta limpeza simples via ADB e a transição para apps abertas, o teu smartphone ganha:</p>
+<div class="code-wrap"><div class="code-bar"><span>código</span><button class="cp-code" type="button">Copiar</button></div><pre><code>Maior autonomia de bateria (sem dezenas de serviços em segundo plano a enviar dados).
+
+Mais memória RAM disponível.
+
+Controlo real sobre a tua privacidade, sem telemetria invasiva ou anúncios integrados no sistema.
+</code></pre></div>
+
+    </div>
+
+    <div class="compartilhar" id="compartilhar"></div>
+
+    <div class="autor-box">
+      <div class="autor-avatar" aria-hidden="true">MV</div>
+      <div class="autor-info">
+        <strong>Escrito por Marcos Vinicius</strong>
+        <p>Autor do Terminal de Bolso. Escrevo guias práticos sobre Linux, código aberto, programação e hardware.</p>
+      </div>
+    </div>
+
+    <div class="nav-posts"><a class="nav-post-card" href="../firefox-160-janela-flutuante-mini-window-e-controles-no-pip/"><small>← Post anterior</small><span>Firefox 160: Janela Flutuante (Mini Window) e Controles no PiP</span></a><a class="nav-post-card" href="../nasceu-o-canal-terminal-de-bolso-no-youtube/"><small>Próximo post →</small><span>Nasceu o canal Terminal de Bolso no YouTube</span></a></div>
+    <div class="relacionados"><h3>Leia também sobre Android</h3><div class="relacionados-grid"><a class="rel-card" href="../adeus-bloatware-como-limpar-seu-celular-de-fabrica-com-o-uni/"><small>09/11/2026 · 3 min</small><strong>Adeus, Bloatware: Como Limpar seu Celular de Fábrica com o Universal Android Debloater (UAD)</strong></a></div></div>
+
+    <div class="acoes-post">
+      <a class="voltar" href="../../#posts">← Voltar para os posts</a>
+      <a class="voltar" href="../../#mais">Ver todos os posts →</a>
+    </div>
+
+    <section class="comentarios" id="comentarios"><h3>Comentários</h3></section>
+  </article>
+</main>
+
+<footer>
+  <div class="wrap footer-grid">
+    <div>© 2026 Terminal de Bolso · Por Marcos Vinicius. Feito com software livre em mente.</div>
+    <div class="footer-links">
+      <a href="../../#posts">Início</a>
+      <a href="../../#mais">Arquivo</a>
+      <a href="../../#privacidade">Privacidade</a>
+      <a href="https://github.com/Terminal-de-Bolso/Terminal-de-Bolso" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var raiz = document.documentElement;
+  var botao = document.getElementById('tema');
+  function atual() {
+    if (raiz.dataset.theme === 'dark' || raiz.dataset.theme === 'light') return raiz.dataset.theme;
+    return (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  function atualizarBotao() {
+    var modo = atual();
+    botao.textContent = modo === 'dark' ? '☀ Claro' : '☾ Escuro';
+    botao.setAttribute('aria-label', modo === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro');
+  }
+  function temaComentarios() {
+    var f = document.querySelector('iframe.giscus-frame');
+    if (f && f.contentWindow) {
+      f.contentWindow.postMessage({ giscus: { setConfig: { theme: atual() } } }, 'https://giscus.app');
+    }
+  }
+  atualizarBotao();
+  botao.addEventListener('click', function () {
+    var novo = atual() === 'dark' ? 'light' : 'dark';
+    raiz.dataset.theme = novo;
+    try { localStorage.setItem('tema', novo); } catch (e) {}
+    atualizarBotao();
+    temaComentarios();
+  });
+
+  var menuBtn = document.getElementById('menu-btn');
+  var nav = document.getElementById('menu-principal');
+  menuBtn.addEventListener('click', function () {
+    var aberto = nav.classList.toggle('aberto');
+    menuBtn.setAttribute('aria-expanded', String(aberto));
+  });
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest ? ev.target.closest('.cp-code') : null;
+    if (!b) return;
+    var pre = b.closest('.code-wrap').querySelector('pre');
+    navigator.clipboard.writeText(pre.textContent).then(function () {
+      b.textContent = 'Copiado!';
+      setTimeout(function () { b.textContent = 'Copiar'; }, 2000);
+    }, function () {});
+  });
+
+  var url = location.href.split('#')[0];
+  var titulo = document.title;
+  var caixa = document.getElementById('compartilhar');
+  caixa.appendChild(Object.assign(document.createElement('span'), { textContent: 'Compartilhar:' }));
+  var copiar = Object.assign(document.createElement('button'), { className: 'share-btn', type: 'button', textContent: 'Copiar link' });
+  copiar.addEventListener('click', function () {
+    navigator.clipboard.writeText(url).then(function () {
+      copiar.textContent = 'Copiado!';
+      setTimeout(function () { copiar.textContent = 'Copiar link'; }, 2000);
+    }, function () {});
+  });
+  caixa.appendChild(copiar);
+  [
+    ['WhatsApp', 'https://wa.me/?text=' + encodeURIComponent(titulo + ' ' + url)],
+    ['X / Twitter', 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(titulo) + '&url=' + encodeURIComponent(url)],
+    ['LinkedIn', 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url)]
+  ].forEach(function (r) {
+    var a = Object.assign(document.createElement('a'), { className: 'share-btn', textContent: r[0], href: r[1], target: '_blank', rel: 'noopener noreferrer' });
+    caixa.appendChild(a);
+  });
+
+  window.addEventListener('load', function () {
+    if (window.hljs) {
+      document.querySelectorAll('pre code').forEach(function (c) { window.hljs.highlightElement(c); });
+    }
+  });
+
+  var s = document.createElement('script');
+  s.src = 'https://giscus.app/client.js';
+  var cfg = {"data-repo": "Terminal-de-Bolso/Terminal-de-Bolso", "data-repo-id": "R_kgDOVniHSw", "data-category": "Announcements", "data-category-id": "DIC_kwDOVniHS84DKsJV", "data-mapping": "specific", "data-strict": "0", "data-reactions-enabled": "1", "data-emit-metadata": "0", "data-input-position": "bottom", "data-lang": "pt"};
+  cfg['data-term'] = "menos-bloatware-mais-privacidade-limpando-o-android-via-adb-";
+  cfg['data-theme'] = atual();
+  for (var k in cfg) s.setAttribute(k, cfg[k]);
+  s.crossOrigin = 'anonymous';
+  s.async = true;
+  document.getElementById('comentarios').appendChild(s);
+})();
+</script>
+</body>
+</html>

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://terminal-de-bolso.github.io/Terminal-de-Bolso/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <url><loc>https://terminal-de-bolso.github.io/Terminal-de-Bolso/</loc></url>
+  <url><loc>https://terminal-de-bolso.github.io/Terminal-de-Bolso/post/melhores-distros-linux-para-reviver-um-pc-antigo/</loc></url>
+  <url><loc>https://terminal-de-bolso.github.io/Terminal-de-Bolso/post/nasceu-o-canal-terminal-de-bolso-no-youtube/</loc></url>
+  <url><loc>https://terminal-de-bolso.github.io/Terminal-de-Bolso/post/menos-bloatware-mais-privacidade-limpando-o-android-via-adb-/</loc></url>
+  <url><loc>https://terminal-de-bolso.github.io/Terminal-de-Bolso/post/firefox-160-janela-flutuante-mini-window-e-controles-no-pip/</loc></url>
+  <url><loc>https://terminal-de-bolso.github.io/Terminal-de-Bolso/post/resumo-noticias-do-mundo-linux-novembro-de-2026/</loc></url>
+  <url><loc>https://terminal-de-bolso.github.io/Terminal-de-Bolso/post/adeus-bloatware-como-limpar-seu-celular-de-fabrica-com-o-uni/</loc></url>
+  <url><loc>https://terminal-de-bolso.github.io/Terminal-de-Bolso/post/alerta-critico-falha-grave-no-wordpress-cve-2026-115252-com-/</loc></url>
 </urlset>
