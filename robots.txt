@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://terminal-de-bolso.github.io/Terminal-de-Bolso/sitemap.xml

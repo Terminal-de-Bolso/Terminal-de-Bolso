@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<title>404 — Página não encontrada | Terminal de Bolso</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+
+:root{
+  --bg:#ffffff;--surface:#f4f7f5;--ink:#111827;--muted:#4b5563;
+  --accent:#2f7d4f;--line:#e5e7eb;--pastel:#b8e6c4;--onpastel:#12361f;
+  --erro:#b91c1c;--radius:8px;color-scheme:light dark;
+}
+
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1115;--surface:#161a20;--ink:#f3f4f6;--muted:#a3adb8;
+    --accent:#8fd6a4;--line:#2a303a;--pastel:#a8e0b8;--onpastel:#0d2917;
+    --erro:#fca5a5;
+  }
+}
+
+:root[data-theme="dark"]{
+  color-scheme:dark;--bg:#0f1115;--surface:#161a20;--ink:#f3f4f6;
+  --muted:#a3adb8;--accent:#8fd6a4;--line:#2a303a;--pastel:#a8e0b8;--onpastel:#0d2917;--erro:#fca5a5;
+}
+
+body{
+  margin:0;min-height:100dvh;display:grid;place-items:center;padding:1.5rem;
+  background:var(--bg);color:var(--ink);
+  font:1.05rem/1.75 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+.caixa{
+  width:100%;max-width:38rem;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--radius);padding:2rem;
+}
+
+.logo{display:inline-block;font-weight:800;font-size:1.35rem;color:var(--ink);text-decoration:none;margin-bottom:1.5rem}
+.logo span{background:var(--pastel);color:var(--onpastel);padding:.08rem .3rem;border-radius:4px}
+
+.cmd{
+  font-family:ui-monospace,"DejaVu Sans Mono",monospace;
+  font-size:.98rem;color:var(--erro);margin:0 0 .75rem;word-break:break-word;
+}
+
+h1{font-size:clamp(1.6rem,5vw,2.1rem);line-height:1.2;margin:0 0 .75rem;letter-spacing:-.02em}
+p{color:var(--muted);margin:0 0 1.5rem}
+
+.acoes{display:flex;flex-wrap:wrap;gap:.75rem}
+.btn{
+  display:inline-block;font-weight:700;text-decoration:none;border-radius:6px;
+  padding:.55rem 1.15rem;background:var(--pastel);color:var(--onpastel);
+}
+.btn:hover{filter:brightness(1.06)}
+.btn-sec{
+  background:var(--bg);color:var(--ink);border:1px solid var(--line);
+}
+</style>
+<script>
+try{
+  var temaSalvo = localStorage.getItem('tema');
+  if(temaSalvo==='dark'||temaSalvo==='light'){document.documentElement.dataset.theme=temaSalvo;}
+}catch(e){}
+</script>
+</head>
+<body>
+  <main class="caixa">
+    <a class="logo" href="/Terminal-de-Bolso/">Terminal <span>de Bolso</span></a>
+    <p class="cmd">bash: cd: caminho não encontrado (erro 404)</p>
+    <h1>Essa página não existe.</h1>
+    <p>O endereço pode ter sido digitado errado ou o conteúdo foi movido. Que tal voltar para a página inicial ou explorar o arquivo de posts?</p>
+    <div class="acoes">
+      <a class="btn" href="/Terminal-de-Bolso/">← Voltar ao início</a>
+      <a class="btn btn-sec" href="/Terminal-de-Bolso/#mais">Ver todos os posts</a>
+    </div>
+  </main>
+</body>
+</html>
