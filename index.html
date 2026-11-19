@@ -20,10 +20,10 @@
 <title>Terminal de Bolso — Blog de Tecnologia e Linux</title>
 <link rel="icon" type="image/png" href="favicon.png">
 
-<!-- Bibliotecas para Markdown, sanitização (XSS) e destaque de sintaxe -->
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js" defer></script>
+<!-- Bibliotecas com versão fixa e verificação de integridade (SRI) -->
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" integrity="sha384-/TQbtLCAerC3jgaim+N78RZSDYV7ryeoBCVqTuzRrFec2akfBkHS7ACQ3PQhvMVi" crossorigin="anonymous" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js" integrity="sha384-+VfUPEb0PdtChMwmBcBmykRMDd+v6D/oFmB3rZM/puCMDYcIvF968OimRh4KQY9a" crossorigin="anonymous" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous" defer></script>
 
 <style>
 *,*::before,*::after{box-sizing:border-box}
@@ -557,18 +557,15 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function renderMarkdownSeguro(md) {
-    var html = '';
-    if (window.marked && typeof window.marked.parse === 'function') {
-      html = window.marked.parse(md);
-    } else {
-      html = md.split(/\n{2,}/).map(function (p) {
+    var temMarked = window.marked && typeof window.marked.parse === 'function';
+    var temPurify = window.DOMPurify && typeof window.DOMPurify.sanitize === 'function';
+    // Sem as duas bibliotecas, mostra só texto puro (nunca HTML sem limpeza)
+    if (!temMarked || !temPurify) {
+      return md.split(/\n{2,}/).map(function (p) {
         return '<p>' + escaparHtml(p).replace(/\n/g, '<br>') + '</p>';
       }).join('');
     }
-    if (window.DOMPurify && typeof window.DOMPurify.sanitize === 'function') {
-      return window.DOMPurify.sanitize(html, { USE_PROFILES: { html: true } });
-    }
-    return html;
+    return window.DOMPurify.sanitize(window.marked.parse(md), { USE_PROFILES: { html: true } });
   }
 
   function extrairResumo(md) {
@@ -631,6 +628,12 @@ document.addEventListener('DOMContentLoaded', function () {
     return '#post/' + encodeURIComponent(post.id);
   }
 
+  // Endereço da página estática do post (gerada por gerar_posts.py)
+  function urlEstatica(post) {
+    var base = location.href.split('#')[0].split('?')[0].replace(/[^\/]*$/, '');
+    return base + 'post/' + encodeURIComponent(post.id) + '/';
+  }
+
   function minutosDeLeitura(texto) {
     var palavras = texto.split(/\s+/).filter(Boolean).length;
     return Math.max(1, Math.ceil(palavras / 200));
@@ -650,6 +653,14 @@ document.addEventListener('DOMContentLoaded', function () {
       var node = document.querySelector(par[0]);
       if (node) node.setAttribute('content', par[1]);
     });
+
+    var canon = document.querySelector('link[rel="canonical"]');
+    if (!canon) {
+      canon = document.createElement('link');
+      canon.rel = 'canonical';
+      document.head.appendChild(canon);
+    }
+    canon.href = post ? urlEstatica(post) : location.href.split('#')[0].split('?')[0];
 
     var jsonLd = document.getElementById('json-ld');
     if (!jsonLd) {
@@ -919,7 +930,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var box = el('div', 'compartilhar');
     box.appendChild(el('span', '', 'Compartilhar:'));
 
-    var url = location.href;
+    var url = urlEstatica(post);
     var texto = post.titulo + ' — Terminal de Bolso';
 
     var btnCopiar = el('button', 'share-btn', 'Copiar link');
@@ -1176,7 +1187,8 @@ document.addEventListener('DOMContentLoaded', function () {
     renderLista(false);
 
     if (hash && hash !== '#posts' && hash !== '#topo') {
-      var alvo = document.querySelector(hash);
+      var alvo = null;
+      try { alvo = document.querySelector(hash); } catch (e) {}
       if (alvo) {
         setTimeout(function () { alvo.scrollIntoView({ behavior: 'smooth' }); }, 30);
       }
@@ -1203,7 +1215,10 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     .catch(function (err) {
       console.error(err);
-      lista.replaceChildren(el('p', 'vazio', 'Erro ao carregar os posts. Verifique se o arquivo posts.json está acessível.'));
+      var msgErro = location.protocol === 'file:'
+        ? 'Não deu para carregar os posts. Abra o site por um servidor local: rode "python3 -m http.server" nesta pasta e acesse http://localhost:8000'
+        : 'Erro ao carregar os posts. Verifique se o arquivo posts.json está acessível.';
+      lista.replaceChildren(el('p', 'vazio', msgErro));
     });
 
   // Eventos de busca
