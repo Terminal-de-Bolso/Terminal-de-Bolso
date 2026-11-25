@@ -47,6 +47,12 @@
       "data": "23/11/2026",
       "titulo": "Linux: 4 novidades da semana (Debian, CachyOS, KDE e Epic Games)",
       "tag": "Linux"
+    },
+    {
+      "texto": "> 🎥 **Assista ao vídeo completo:** [Clique aqui para assistir no YouTube] https://youtu.be/cNZdBwnIGxQ?is=L7A958o4tpGu1dft\n\nConfira o resumo das principais novidades do ecossistema Android, privacidade e segurança entre os dias 19 e 25 de novembro:\n\n## 1. GrapheneOS acusa o Google de pressionar fabricantes\nO **GrapheneOS**, sistema operacional baseado em Android focado em privacidade, acusou o Google de pressionar fabricantes de smartphones para que não fechem parcerias com o projeto. \n\nAté o momento, nenhuma prova pública foi apresentada e o Google não respondeu às declarações. A polêmica acontece perto do lançamento do **Motorola Signature 27**, apontado como o primeiro aparelho fora da linha Google a receber suporte oficial do sistema — embora a instalação continue exigindo que o usuário faça o processo manualmente.\n\n## 2. Atualizações de novembro do Google para Android\nO pacote de novidades de novembro traz melhorias práticas para o dia a dia no sistema e nos aplicativos oficiais:\n* **Quick Share:** prévia de links do YouTube antes do envio.\n* **Google Wallet:** preenchimento automático do código de segurança (CVV) dos cartões.\n* **Google Play Store:** novos controles para você decidir se deseja compartilhar sua faixa de idade com os aplicativos, além de suporte a conquistas nos jogos.\n\n## 3. Patch de novembro nos aparelhos Samsung Galaxy\nA Samsung está ampliando a distribuição do pacote de segurança de novembro para mais modelos da linha Galaxy. A atualização reúne **179 correções ao todo** — sendo 20 classificadas como críticas (155 enviadas pelo Google e 24 desenvolvidas pela própria Samsung).\n\n---\n\n### 💡 Dica rápida de segurança\nEm novembro, o Google corrigiu uma vulnerabilidade crítica que afeta aparelhos do **Android 14 ao Android 17**. Para saber se o seu celular já está protegido, acesse as configurações do sistema e verifique se o **nível do patch de segurança** está em `2026-11-01` ou mais recente (o prazo de liberação varia conforme cada fabricante).\n\n---\n\nQual dessas notícias chamou mais a sua atenção nesta semana? Deixe seu comentário e acompanhe o **Terminal de Bolso** para mais novidades sobre Android, Linux e privacidade.\n",
+      "titulo": "Notícias de Android (19 a 25 de novembro): GrapheneOS, novidades do Google e patch de segurança",
+      "data": "25/11/2026",
+      "tag": "Android "
     }
   ]
 }
